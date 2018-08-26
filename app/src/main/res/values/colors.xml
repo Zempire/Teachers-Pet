@@ -2,5 +2,8 @@
 <resources>
     <color name="colorPrimary">#830b1f</color>
     <color name="colorPrimaryDark">#510d18</color>
-    <color name="colorAccent">#d2304b</color>
+    <color name="colorAccent">#da0e30</color>
+
+    <!--Resources for Tabs and stuff-->
+    <color name="unselectedTab">#C2C2C2</color>
 </resources>

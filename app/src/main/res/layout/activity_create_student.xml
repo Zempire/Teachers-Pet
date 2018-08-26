@@ -107,23 +107,52 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".7"
-            android:text="choose" />
+            android:backgroundTint="@android:color/transparent"
+            android:text="choose"
+            style="?android:attr/borderlessButtonStyle" />
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/address"
+    <TextView
+        android:id="@+id/addressHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:text="Address"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/genderRadioGroup" />
+
+    <LinearLayout
+        android:id="@+id/addressLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:hint="Address"
-        android:inputType="textPostalAddress"
+        android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_dobLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/addressHeader">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FUCK" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="YOU" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/course"
@@ -136,13 +165,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address" />
+        app:layout_constraintTop_toBottomOf="@+id/addressLayout" />
 
     <LinearLayout
         android:id="@+id/optionsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#b2b2b2"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -153,17 +181,68 @@
             android:id="@+id/cancel_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="1dp"
             android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:text="cancel" />
+            android:background="@color/colorPrimaryDark"
+            android:text="CANCEL"
+            style="@style/ButtonColor"/>
 
         <Button
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="1dp"
             android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:text="Save" />
+            android:background="@color/colorPrimaryDark"
+            android:text="SAVE"
+            style="@style/ButtonColor"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/genderHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Gender"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_dobLayout" />
+
+    <RadioGroup
+        android:id="@+id/genderRadioGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/genderHeader">
+
+        <RadioButton
+            android:id="@+id/maleRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="18dp"
+            android:text="Male" />
+
+        <RadioButton
+            android:id="@+id/femaleRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="18dp"
+            android:text="Female" />
+
+        <RadioButton
+            android:id="@+id/otherRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Other" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
