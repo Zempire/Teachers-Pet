@@ -1,5 +1,6 @@
 package com.example.android.tabsetup;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,7 +29,8 @@ public class StudentList extends Fragment {
         studentFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Start)
+                Intent intent = new Intent(getActivity(), StudentCreator.class);
+                startActivity(intent);
             }
         });
     }
