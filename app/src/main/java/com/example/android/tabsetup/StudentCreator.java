@@ -1,15 +1,21 @@
 package com.example.android.tabsetup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,15 +24,17 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import static android.R.layout.simple_spinner_dropdown_item;
 
 public class StudentCreator extends AppCompatActivity {
-
+    EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_country, stud_post;
     TextView address;
     AutoCompleteTextView stud_state, stud_course;
     LinearLayout addressExpanded;
-    Spinner spinner;
+    Button saveStudent, cancelStudent;
+    RadioGroup gender;
 
     final String[] STATES = new String[]{
             "State", "NSW", "VIC", "QLD", "NT", "WA", "SA", "TAS", "ACT"};
@@ -157,11 +165,21 @@ public class StudentCreator extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_student);
 
-        spinner = findViewById(R.id.stateSpinner);
+        firstName = findViewById(R.id.firstName);
+        lastName = findViewById(R.id.lastName);
+        studentID = findViewById(R.id.studentID);
+        studentDOB = findViewById(R.id.studentDOB);
+        stud_street = findViewById(R.id.stud_street);
+        stud_city = findViewById(R.id.stud_city);
+        stud_country = findViewById(R.id.stud_country);
+        stud_post = findViewById(R.id.stud_post);
+        gender = findViewById(R.id.genderRadioGroup);
         address = findViewById(R.id.addressHeader);
         addressExpanded = findViewById(R.id.addressLayout);
         stud_state = findViewById(R.id.stud_state);
         stud_course = findViewById(R.id.course);
+        saveStudent = findViewById(R.id.save_btn);
+
 
         address.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +190,36 @@ public class StudentCreator extends AppCompatActivity {
                     addressExpanded.setVisibility(view.VISIBLE);
             }
         });
+        final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class,
+                "production").allowMainThreadQueries().build();
+
+        saveStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String ID = studentID.getText().toString();
+                int id = Integer.parseInt(ID);
+                String wholeAddress = stud_street.getText().toString() + ", " +
+                                      stud_city.getText().toString() + ", " +
+                                      stud_state.getText().toString() + ", " +
+                                      stud_post.getText().toString();
+                String genderChoice = "";
+                if (gender.getCheckedRadioButtonId()!=-1) {
+                    genderChoice = ((RadioButton)findViewById(gender.getCheckedRadioButtonId()))
+                            .getText().toString();
+                }
+
+                Student newStudent =  new Student(id, firstName.getText().toString(),
+                        lastName.getText().toString(),
+                        wholeAddress,
+                        studentDOB.getText().toString(), genderChoice,
+                        stud_course.getText().toString());
+                db.UserDao().insertAll(newStudent);
+                startActivity(new Intent(StudentCreator.this, MainActivity.class));
+            }
+        });
+
+        /* Give a list of strings to TextViews to allow auto complete option for users.*/
+
         ArrayAdapter state_adapter = new ArrayAdapter(this,
                 android.R.layout.simple_dropdown_item_1line, STATES);
         stud_state.setAdapter(state_adapter);
@@ -179,27 +227,6 @@ public class StudentCreator extends AppCompatActivity {
         ArrayAdapter course_adapter = new ArrayAdapter(this,
                 android.R.layout.simple_dropdown_item_1line, COURSES);
         stud_course.setAdapter(course_adapter);
-
-        addItemsToSpinner(spinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-    }
-
-    public void addItemsToSpinner(Spinner spinner) {
-        List<String> stateList = new ArrayList<>(Arrays.asList(STATES));
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
-                (this, android.R.layout.simple_spinner_item, stateList);
-        dataAdapter.setDropDownViewResource(simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
 
     }
 }

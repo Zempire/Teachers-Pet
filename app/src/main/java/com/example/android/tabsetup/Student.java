@@ -1,5 +1,6 @@
 package com.example.android.tabsetup;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -16,21 +17,32 @@ public class Student {
         this.course = course;
     }
 
+    @PrimaryKey
     private int student_ID;
 
+    @ColumnInfo(name = "first_name")
     private String firstName;
 
+    @ColumnInfo(name = "last_name")
     private String lastName;
 
+    @ColumnInfo(name = "address")
     private String address;
 
+    @ColumnInfo(name = "dob")
     private String dob;
 
+    @ColumnInfo(name = "gender")
     private String gender;
 
+    @ColumnInfo(name = "course")
     private String course;
 
-    public String getStudent_ID() {
+    public int getStudent_ID() {
+        return student_ID;
+    }
+
+    public String getStudent_IDString() {
         return String.valueOf(student_ID);      //RETURNING AS STRING FOR USE WITH STUDENT ADAPTER,
     }
 
