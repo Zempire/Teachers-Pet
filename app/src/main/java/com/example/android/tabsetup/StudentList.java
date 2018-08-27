@@ -23,7 +23,7 @@ public class StudentList extends Fragment {
     FloatingActionButton studentFab;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
-    ArrayList<String> students;
+    ArrayList<Student> students;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,7 +34,9 @@ public class StudentList extends Fragment {
         students = new ArrayList<>();
 
         for (int i = 0; i < 30; i++) {
-            students.add("Gino's clone number " + i);
+            Student student = new Student(19191212, "Gino Clone" + i, "Zem",
+                    "123 Hello Road", "09/031987", "Male", "Bachelor of Shit");
+            students.add(student);
         }
         adapter = new StudentAdapter(students);
         recyclerView.setAdapter(adapter);

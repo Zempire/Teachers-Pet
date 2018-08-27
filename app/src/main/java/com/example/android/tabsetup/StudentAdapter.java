@@ -12,10 +12,10 @@ import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.RecyclerView;
 
 class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHolder> {
-    ArrayList<String> students;
+    ArrayList<Student> students;
 
     //Constructor for students array.
-    public StudentAdapter(ArrayList<String> students) {
+    public StudentAdapter(ArrayList<Student> students) {
         this.students = students;
     }
 
@@ -28,7 +28,9 @@ class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull StudentAdapter.ViewHolder holder, int position) {
-        holder.firstName.setText(students.get(position));
+        holder.firstName.setText(students.get(position).getFirstName());
+        holder.lastName.setText(students.get(position).getLastName());
+        holder.student_ID.setText(students.get(position).getStudent_ID()); //How to convert to string?
     }
 
     @Override
@@ -38,10 +40,14 @@ class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView firstName;
+        public TextView lastName;
+        public TextView student_ID;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             firstName = itemView.findViewById(R.id.first_name);
+            lastName = itemView.findViewById(R.id.last_name);
+            student_ID = itemView.findViewById(R.id.student_id);
         }
     }
 }
