@@ -10,16 +10,36 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class StudentList extends Fragment {
 
     FloatingActionButton studentFab;
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
+    ArrayList<String> students;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_student_tab, container, false);
+        View rootView = inflater.inflate(R.layout.activity_student_tab, container, false);
+        recyclerView = rootView.findViewById(R.id.studentRecycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // Note the reference for LinearLayoutManager is getActivity() not "this"
+        students = new ArrayList<>();
+
+        for (int i = 0; i < 30; i++) {
+            students.add("Gino's clone number " + i);
+        }
+        adapter = new StudentAdapter(students);
+        recyclerView.setAdapter(adapter);
+
+        return rootView;
     }
 
     @Override
@@ -34,4 +54,6 @@ public class StudentList extends Fragment {
             }
         });
     }
+
+
 }
