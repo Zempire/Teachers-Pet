@@ -1,12 +1,16 @@
 package com.example.android.tabsetup;
 
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -19,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -29,11 +34,12 @@ import androidx.room.Room;
 import static android.R.layout.simple_spinner_dropdown_item;
 
 public class StudentCreator extends AppCompatActivity {
-    EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_country, stud_post;
+    EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_post;
     TextView address;
     AutoCompleteTextView stud_state, stud_course;
     LinearLayout addressExpanded;
-    Button saveStudent, cancelStudent;
+    Button saveStudent, cancelStudent, selectDateBtn;
+    DatePickerDialog datePickerDialog;
     RadioGroup gender;
 
     final String[] STATES = new String[]{
@@ -171,7 +177,6 @@ public class StudentCreator extends AppCompatActivity {
         studentDOB = findViewById(R.id.studentDOB);
         stud_street = findViewById(R.id.stud_street);
         stud_city = findViewById(R.id.stud_city);
-        stud_country = findViewById(R.id.stud_country);
         stud_post = findViewById(R.id.stud_post);
         gender = findViewById(R.id.genderRadioGroup);
         address = findViewById(R.id.addressHeader);
@@ -179,6 +184,26 @@ public class StudentCreator extends AppCompatActivity {
         stud_state = findViewById(R.id.stud_state);
         stud_course = findViewById(R.id.course);
         saveStudent = findViewById(R.id.save_btn);
+        cancelStudent = findViewById(R.id.cancel_btn);
+        selectDateBtn = findViewById(R.id.selectDateBtn);
+
+        selectDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                datePickerDialog = new DatePickerDialog(StudentCreator.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                studentDOB.setText(day + "/" + (month + 1) + "/" + year);
+                            }
+                        }, year, month, day );
+                datePickerDialog.show();
+            }
+        });
 
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
@@ -187,24 +212,41 @@ public class StudentCreator extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String ID = studentID.getText().toString();
-                int id = Integer.parseInt(ID);
-                String wholeAddress = stud_street.getText().toString() + ", " +
-                                      stud_city.getText().toString() + ", " +
-                                      stud_state.getText().toString() + ", " +
-                                      stud_post.getText().toString();
-                String genderChoice = "";
-                if (gender.getCheckedRadioButtonId()!=-1) {
-                    genderChoice = ((RadioButton)findViewById(gender.getCheckedRadioButtonId()))
-                            .getText().toString();
-                }
+                if (ID.matches("")) {
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(StudentCreator.this);
+                    builder.setMessage("Please enter a Student Number.")
+                            .setNegativeButton("OK", null);
 
-                Student newStudent =  new Student(id, firstName.getText().toString(),
-                        lastName.getText().toString(),
-                        wholeAddress,
-                        studentDOB.getText().toString(), genderChoice,
-                        stud_course.getText().toString());
-                db.UserDao().insertAll(newStudent);
-                startActivity(new Intent(StudentCreator.this, MainActivity.class));
+                    android.app.AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    int id = Integer.parseInt(ID);
+                    String wholeAddress = stud_street.getText().toString() + ", " +
+                            stud_city.getText().toString() + ", " +
+                            stud_state.getText().toString() + ", " +
+                            stud_post.getText().toString();
+                    String genderChoice = "";
+                    if (gender.getCheckedRadioButtonId() != -1) {
+                        genderChoice = ((RadioButton) findViewById(gender.getCheckedRadioButtonId()))
+                                .getText().toString();
+                    }
+
+                    Student newStudent = new Student(id, firstName.getText().toString(),
+                            lastName.getText().toString(),
+                            wholeAddress,
+                            studentDOB.getText().toString(), genderChoice,
+                            stud_course.getText().toString());
+                    db.UserDao().insertAll(newStudent);
+                    startActivity(new Intent(StudentCreator.this, MainActivity.class));
+                    finish();
+                }
+            }
+        });
+
+        cancelStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
 

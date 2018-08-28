@@ -5,5 +5,8 @@
     <color name="colorAccent">#da0e30</color>
 
     <!--Resources for Tabs and stuff-->
-    <color name="unselectedTab">#8e8e8e</color>
+    <color name="unselectedTab">#777</color>
+    <color name="taskTab">#186cd2</color>
+    <color name="taskTabDark">#0d4386</color>
+    <color name="taskTabAccent">#25c4fd</color>
 </resources>

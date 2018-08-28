@@ -1,6 +1,10 @@
 package com.example.android.tabsetup;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +19,8 @@ import java.util.List;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHolder>{
     List<Student> students;
@@ -89,16 +95,41 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                     delete(getLayoutPosition());
                 }
             });
+
+            viewStudentBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    update(getAdapterPosition(), view);
+                }
+            });
         }
 
 
 
-        public void delete(int position) {
-            int ID = Integer.parseInt(student_ID.getText().toString());
+        public void delete(final int position) {
+            final int ID = Integer.parseInt(student_ID.getText().toString());
+            AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+            builder.setMessage("Delete Student?")
+                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            students.remove(position);
+                            db.UserDao().deleteStudent(ID);
+                            notifyItemRemoved(position);
+                        }
+                    }).setNegativeButton("CANCEL", null);
 
-            students.remove(position);
-            db.UserDao().deleteStudent(ID);
-            notifyItemRemoved(position);
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }
+
+        public void update(int position, View view) {
+            Context context = view.getContext();
+            Intent intent = new Intent(context, StudentUpdater.class);
+            intent.putExtra("STUDENT_ID", student_ID.getText().toString());
+            context.startActivity(intent);
+            ((Activity)context).finish();
         }
 
     }

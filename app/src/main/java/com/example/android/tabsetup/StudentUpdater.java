@@ -1,5 +1,6 @@
 package com.example.android.tabsetup;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -14,13 +16,11 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.textfield.TextInputEditText;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,12 +29,15 @@ import androidx.room.Room;
 import static android.R.layout.simple_spinner_dropdown_item;
 
 public class StudentUpdater extends AppCompatActivity {
-    EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_country, stud_post;
+    EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_post;
     TextView address;
     AutoCompleteTextView stud_state, stud_course;
     LinearLayout addressExpanded;
-    Button saveStudent, cancelStudent;
+    Button saveStudent, cancelStudent, selectDateBtn;
+    DatePickerDialog datePickerDialog;
     RadioGroup gender;
+    Student currentStudent;
+    String currentStudentID;
 
     final String[] STATES = new String[]{
             "State", "NSW", "VIC", "QLD", "NT", "WA", "SA", "TAS", "ACT"};
@@ -165,6 +168,13 @@ public class StudentUpdater extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_student);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+            currentStudentID = extras.getString("STUDENT_ID");
+
+        final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class,
+                "production").allowMainThreadQueries().build();
+
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
         studentID = findViewById(R.id.studentID);
@@ -173,20 +183,57 @@ public class StudentUpdater extends AppCompatActivity {
         stud_city = findViewById(R.id.stud_city);
         stud_post = findViewById(R.id.stud_post);
         gender = findViewById(R.id.genderRadioGroup);
-        address = findViewById(R.id.addressHeader);
         addressExpanded = findViewById(R.id.addressLayout);
         stud_state = findViewById(R.id.stud_state);
         stud_course = findViewById(R.id.course);
         saveStudent = findViewById(R.id.save_btn);
+        cancelStudent = findViewById(R.id.cancel_btn);
+        selectDateBtn = findViewById(R.id.selectDateBtn);
 
-        final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class,
-                "production").allowMainThreadQueries().build();
+        selectDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                datePickerDialog = new DatePickerDialog(StudentUpdater.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                studentDOB.setText(day + "/" + (month + 1) + "/" + year);
+                            }
+                        }, year, month, day );
+                datePickerDialog.show();
+            }
+        });
+
+        // SET UP THIS ACTIVITY TO REUSE CODE FROM STUDENT CREATOR BUT WITH NEW RULES AND ADDITIONS.
+        studentID.setText(currentStudentID);
+        studentID.setEnabled(false);        //This attribute should never change as is primary key.
+
+        final int ID = Integer.parseInt(currentStudentID); //Parse to int so we can query the database.
+        currentStudent = db.UserDao().getStudent(ID); //We now have our student as an object again.
+
+        List<String> addressArray = Arrays.asList(currentStudent.getAddress().split("\\s*,\\s*"));
+        /* TODO: Make sure user inputs all information. */
+        firstName.setText(currentStudent.getFirstName());
+        lastName.setText(currentStudent.getLastName());
+
+        if (addressArray.size() > 3) {
+            stud_street.setText(addressArray.get(0));
+            stud_city.setText(addressArray.get(1));
+            stud_state.setText(addressArray.get(2));
+            stud_post.setText(addressArray.get(3));
+        }
+        studentDOB.setText(currentStudent.getDob());
+        stud_course.setText(currentStudent.getCourse());
+
+        //TODO: Make sure information from gender radiobutton carries over.
 
         saveStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String ID = studentID.getText().toString();
-                int id = Integer.parseInt(ID);
                 String wholeAddress = stud_street.getText().toString() + ", " +
                         stud_city.getText().toString() + ", " +
                         stud_state.getText().toString() + ", " +
@@ -197,13 +244,22 @@ public class StudentUpdater extends AppCompatActivity {
                             .getText().toString();
                 }
 
-                Student newStudent =  new Student(id, firstName.getText().toString(),
+                currentStudent =  new Student(ID, firstName.getText().toString(),
                         lastName.getText().toString(),
                         wholeAddress,
                         studentDOB.getText().toString(), genderChoice,
                         stud_course.getText().toString());
-                db.UserDao().insertAll(newStudent);
+                db.UserDao().updateStudent(currentStudent);
                 startActivity(new Intent(StudentUpdater.this, MainActivity.class));
+                finish();
+            }
+        });
+
+        cancelStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(StudentUpdater.this, MainActivity.class));
+                finish();
             }
         });
 
