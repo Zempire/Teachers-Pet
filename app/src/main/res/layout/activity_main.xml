@@ -11,14 +11,16 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimaryDark"/>
+        android:background="?attr/colorAccent" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
+        app:tabBackground="@drawable/tab_color_selector"
         app:tabSelectedTextColor="@android:color/white"
+        app:tabIndicator="@color/colorPrimaryDark"
         app:tabTextColor="@color/unselectedTab">
 
         <com.google.android.material.tabs.TabItem

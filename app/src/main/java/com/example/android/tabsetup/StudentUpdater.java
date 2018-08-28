@@ -28,7 +28,7 @@ import androidx.room.Room;
 
 import static android.R.layout.simple_spinner_dropdown_item;
 
-public class StudentCreator extends AppCompatActivity {
+public class StudentUpdater extends AppCompatActivity {
     EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_country, stud_post;
     TextView address;
     AutoCompleteTextView stud_state, stud_course;
@@ -171,7 +171,6 @@ public class StudentCreator extends AppCompatActivity {
         studentDOB = findViewById(R.id.studentDOB);
         stud_street = findViewById(R.id.stud_street);
         stud_city = findViewById(R.id.stud_city);
-        stud_country = findViewById(R.id.stud_country);
         stud_post = findViewById(R.id.stud_post);
         gender = findViewById(R.id.genderRadioGroup);
         address = findViewById(R.id.addressHeader);
@@ -189,9 +188,9 @@ public class StudentCreator extends AppCompatActivity {
                 String ID = studentID.getText().toString();
                 int id = Integer.parseInt(ID);
                 String wholeAddress = stud_street.getText().toString() + ", " +
-                                      stud_city.getText().toString() + ", " +
-                                      stud_state.getText().toString() + ", " +
-                                      stud_post.getText().toString();
+                        stud_city.getText().toString() + ", " +
+                        stud_state.getText().toString() + ", " +
+                        stud_post.getText().toString();
                 String genderChoice = "";
                 if (gender.getCheckedRadioButtonId()!=-1) {
                     genderChoice = ((RadioButton)findViewById(gender.getCheckedRadioButtonId()))
@@ -204,7 +203,7 @@ public class StudentCreator extends AppCompatActivity {
                         studentDOB.getText().toString(), genderChoice,
                         stud_course.getText().toString());
                 db.UserDao().insertAll(newStudent);
-                startActivity(new Intent(StudentCreator.this, MainActivity.class));
+                startActivity(new Intent(StudentUpdater.this, MainActivity.class));
             }
         });
 
