@@ -1,7 +1,10 @@
 package com.example.android.tabsetup;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +42,19 @@ public class TaskList extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.taskRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // Note the reference for LinearLayoutManager is getActivity() not "this"
         adapter = new TaskAdapter(tasks);
         recyclerView.setAdapter(adapter);
+
+        taskFab = rootView.findViewById(R.id.taskFab);
+        taskFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TaskCreator newTask = new TaskCreator(getActivity());
+                newTask.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                newTask.setCancelable(false);
+                newTask.show();
+            }
+        });
 
         return rootView;
     }
@@ -49,14 +62,7 @@ public class TaskList extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        taskFab = getView().findViewById(R.id.taskFab);
-        taskFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), StudentCreator.class);
-                startActivity(intent);
-            }
-        });
+
     }
 
 

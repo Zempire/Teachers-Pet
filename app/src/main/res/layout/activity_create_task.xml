@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:background="?android:colorBackground">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="12dp"
+        android:text="NEW TASK"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/taskNameContainer"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/taskName"
@@ -27,17 +39,20 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/taskDescriptionContainer"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/taskNameContainer"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskNameContainer">
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="visible">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/taskDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/taskDescriptionContainer"
+            android:layout_alignStart="@+id/taskDescriptionContainer"
             android:hint="Task Description"
             android:inputType="textMultiLine" />
 
@@ -45,12 +60,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/taskLocationContainer"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/taskDescriptionContainer"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskDescriptionContainer">
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="visible">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/taskLocation"
@@ -65,12 +81,12 @@
         android:id="@+id/optionsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_below="@+id/taskLocationContainer"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="23dp"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskLocationContainer">
+        android:visibility="visible">
 
         <Button
             android:id="@+id/task_cancel_btn"
@@ -92,4 +108,4 @@
     </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

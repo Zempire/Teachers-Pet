@@ -1,45 +1,32 @@
 package com.example.android.tabsetup;
 
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
-import static android.R.layout.simple_spinner_dropdown_item;
+public class TaskCreator extends Dialog {
 
-public class TaskCreator extends AppCompatActivity {
+    public Activity a;
+    public Dialog d;
     EditText taskName, taskDescription, taskLocation;
     Button saveTask, cancelTask;
+
+    public TaskCreator(Activity c) {
+        super(c);
+        this.a = c;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_create_task);
 
         taskName = findViewById(R.id.taskName);
@@ -49,7 +36,7 @@ public class TaskCreator extends AppCompatActivity {
         saveTask = findViewById(R.id.task_save_btn);
 
 
-        final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class,
+        final AppDatabase db = Room.databaseBuilder(getContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
         saveTask.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +52,7 @@ public class TaskCreator extends AppCompatActivity {
         cancelTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                //Close the Dialog
             }
         });
     }

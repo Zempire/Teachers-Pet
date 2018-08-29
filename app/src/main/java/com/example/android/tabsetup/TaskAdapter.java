@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -23,7 +24,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     private int previousExpandPosition = -1;
 
     //Constructor for students array.
-    public TaskAdapter(List<Task> students) {
+    public TaskAdapter(List<Task> tasks) {
         this.tasks = tasks;
     }
 
@@ -36,7 +37,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final TaskAdapter.ViewHolder holder, final int position) {
-        holder.taskID.setText(tasks.get(position).getTask_ID());
+//        holder.taskID.setText(tasks.get(position).getTask_ID());
         holder.taskDate.setText(tasks.get(position).getTaskDate());
         holder.taskName.setText(tasks.get(position).getTaskName());
         holder.taskDesc.setText(tasks.get(position).getTaskDesc());
@@ -71,7 +72,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         public TextView taskDate;
         public TextView taskLocation;
         public ConstraintLayout taskContainer, optionsContainer;
-        public Button deleteTaskBtn, completeTaskBtn;
+        public ImageView deleteTaskBtn, completeTaskBtn;
 
         AppDatabase db = Room.databaseBuilder(itemView.getContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
