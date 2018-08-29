@@ -49,7 +49,7 @@ public class TaskList extends Fragment {
         taskFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TaskCreator newTask = new TaskCreator(getActivity());
+                TaskCreator newTask = new TaskCreator(getActivity() );
                 newTask.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 newTask.setCancelable(false);
                 newTask.show();

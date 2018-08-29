@@ -37,6 +37,10 @@ public class Task {
         return task_ID;
     }
 
+    public String getTask_IDString() {
+        return String.valueOf(task_ID);
+    }
+
     public void setTask_ID(int task_ID) {
         this.task_ID = task_ID;
     }

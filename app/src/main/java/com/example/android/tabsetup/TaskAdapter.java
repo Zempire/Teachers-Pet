@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.List;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +39,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final TaskAdapter.ViewHolder holder, final int position) {
-//        holder.taskID.setText(tasks.get(position).getTask_ID());
+        holder.taskID.setText(tasks.get(position).getTask_IDString());
         holder.taskDate.setText(tasks.get(position).getTaskDate());
         holder.taskName.setText(tasks.get(position).getTaskName());
         holder.taskDesc.setText(tasks.get(position).getTaskDesc());
@@ -92,7 +94,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
             deleteTaskBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    delete(getLayoutPosition());
+                    delete(getLayoutPosition());
                 }
             });
 
@@ -106,23 +108,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
 
 
 
-//        public void delete(final int position) {
-//            final int ID = itemView.getId();
-//            AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
-//            builder.setMessage("Delete Task?")
-//                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            tasks.remove(position);
-//                            db.UserDao().deleteTask(ID);
-//                            notifyItemRemoved(position);
-//                        }
-//                    }).setNegativeButton("CANCEL", null);
-//
-//            AlertDialog alert = builder.create();
-//            alert.show();
-//
-//        }
+        public void delete(final int position) {
+            final int ID = Integer.parseInt(taskID.getText().toString());
+            Toast.makeText(itemView.getContext(), "This tasks ID is " + ID, Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+            builder.setMessage("Delete Task?")
+                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            tasks.remove(position);
+                            db.UserDao().deleteTask(ID);
+                            notifyItemRemoved(position);
+                        }
+                    }).setNegativeButton("CANCEL", null);
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }
 
 //        public void update(int position, View view) {
 //            Context context = view.getContext();

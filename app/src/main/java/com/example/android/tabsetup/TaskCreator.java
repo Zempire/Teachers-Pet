@@ -2,13 +2,11 @@ package com.example.android.tabsetup;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 public class TaskCreator extends Dialog {
@@ -21,6 +19,7 @@ public class TaskCreator extends Dialog {
     public TaskCreator(Activity c) {
         super(c);
         this.a = c;
+
     }
 
     @Override
@@ -42,10 +41,14 @@ public class TaskCreator extends Dialog {
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    Task newTask = new Task(taskName.getText().toString(),
-                            taskDescription.getText().toString(),
-                            taskLocation.getText().toString(), "29/08/2018");
-                    db.UserDao().insertAllTask(newTask);
+                Task newTask = new Task(taskName.getText().toString(),
+                        taskDescription.getText().toString(),
+                        "@ " + taskLocation.getText().toString(), "29/08/2018");
+                db.UserDao().insertAllTask(newTask);
+
+                dismiss();
+                a.recreate();
+
                 }
             });
 
@@ -53,6 +56,7 @@ public class TaskCreator extends Dialog {
             @Override
             public void onClick(View view) {
                 //Close the Dialog
+                dismiss();
             }
         });
     }

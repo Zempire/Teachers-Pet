@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/taskContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:text="DD/MM/YYYY"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +23,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Task Name"
         android:textAlignment="center"
-        android:textSize="18sp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toStartOf="@+id/completeTaskBtn"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/task_date"
@@ -58,8 +60,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,11 +72,15 @@
             android:id="@+id/task_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello good sir I hope you are having a wonderful day today out in the sun with all the birds tweeting away like there is not a worry in the world."
-            android:textStyle="italic"
+            android:layout_marginTop="8dp"
             android:maxLines="5"
+            android:text="Hello good sir I hope you are having a wonderful day today out in the sun with all the birds tweeting away like there is not a worry in the world."
+            android:textSize="18sp"
+            android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/task_location"
