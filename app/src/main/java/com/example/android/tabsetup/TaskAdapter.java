@@ -36,8 +36,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final TaskAdapter.ViewHolder holder, final int position) {
+        holder.taskID.setText(tasks.get(position).getTask_ID());
         holder.taskDate.setText(tasks.get(position).getTaskDate());
-        holder.taskName.setText(tasks.get(position).getTaskname());
+        holder.taskName.setText(tasks.get(position).getTaskName());
         holder.taskDesc.setText(tasks.get(position).getTaskDesc());
         holder.taskLocation.setText(tasks.get(position).getTaskLocation());
 
@@ -77,58 +78,58 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
 
         public ViewHolder(View itemView) {
             super(itemView);
-            taskID = itemView.findViewById(R.id.task_ID)
+            taskID = itemView.findViewById(R.id.task_ID);
             taskName = itemView.findViewById(R.id.task_name);
             taskDesc = itemView.findViewById(R.id.task_desc);
             taskDate = itemView.findViewById(R.id.task_date);
-            taskLocation = itemView.findViewById(R.id.student_address);
-            taskContainer = itemView.findViewById(R.id.studentContainer);
+            taskLocation = itemView.findViewById(R.id.task_location);
+            taskContainer = itemView.findViewById(R.id.taskContainer);
             optionsContainer = itemView.findViewById(R.id.optionsContainer);
-            deleteTaskBtn = itemView.findViewById(R.id.deleteStudentBtn);
-            completeTaskBtn = itemView.findViewById(R.id.viewStudentBtn);
+            deleteTaskBtn = itemView.findViewById(R.id.deleteTaskBtn);
+            completeTaskBtn = itemView.findViewById(R.id.completeTaskBtn);
 
             deleteTaskBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    delete(getLayoutPosition());
+//                    delete(getLayoutPosition());
                 }
             });
 
             completeTaskBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    update(getAdapterPosition(), view);
+//                    update(getAdapterPosition(), view);
                 }
             });
         }
 
 
 
-        public void delete(final int position) {
-            final int ID = Integer.parseInt(student_ID.getText().toString());
-            AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
-            builder.setMessage("Delete Student?")
-                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            students.remove(position);
-                            db.UserDao().deleteStudent(ID);
-                            notifyItemRemoved(position);
-                        }
-                    }).setNegativeButton("CANCEL", null);
+//        public void delete(final int position) {
+//            final int ID = itemView.getId();
+//            AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+//            builder.setMessage("Delete Task?")
+//                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            tasks.remove(position);
+//                            db.UserDao().deleteTask(ID);
+//                            notifyItemRemoved(position);
+//                        }
+//                    }).setNegativeButton("CANCEL", null);
+//
+//            AlertDialog alert = builder.create();
+//            alert.show();
+//
+//        }
 
-            AlertDialog alert = builder.create();
-            alert.show();
-
-        }
-
-        public void update(int position, View view) {
-            Context context = view.getContext();
-            Intent intent = new Intent(context, StudentUpdater.class);
-            intent.putExtra("STUDENT_ID", student_ID.getText().toString());
-            context.startActivity(intent);
-            ((Activity)context).finish();
-        }
+//        public void update(int position, View view) {
+//            Context context = view.getContext();
+//            Intent intent = new Intent(context, StudentUpdater.class);
+//            intent.putExtra("STUDENT_ID", student_ID.getText().toString());
+//            context.startActivity(intent);
+//            ((Activity)context).finish();
+//        }
 
     }
 }

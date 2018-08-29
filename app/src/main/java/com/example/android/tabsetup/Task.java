@@ -4,8 +4,16 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(tableName = "Task")
 public class Task {
+
+    public Task(String taskName, String taskDesc, String taskLocation, String taskDate) {
+        this.taskName = taskName;
+        this.taskDesc = taskDesc;
+        this.taskLocation = taskLocation;
+        this.taskDate = taskDate;
+
+    }
 
     @PrimaryKey(autoGenerate = true)
     private int task_ID;
@@ -25,28 +33,20 @@ public class Task {
     @ColumnInfo(name = "task_date")
     private String taskDate;
 
-    public Task(String task_name, String task_desc, String task_location, String task_date) {
-        this.taskName = task_name;
-        this.taskDesc = task_desc;
-        this.taskLocation = task_location;
-        this.taskDate = task_date;
-
-    }
-
-    public int getTaskID() {
+    public int getTask_ID() {
         return task_ID;
     }
 
-    public void setTaskID(int task_ID) {
+    public void setTask_ID(int task_ID) {
         this.task_ID = task_ID;
     }
 
-    public String getTaskname() {
+    public String getTaskName() {
         return taskName;
     }
 
-    public void setTaskname(String task_name) {
-        this.taskName = task_name;
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
     public String getTaskDesc() {

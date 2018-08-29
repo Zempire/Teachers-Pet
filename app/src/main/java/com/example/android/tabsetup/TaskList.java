@@ -24,7 +24,7 @@ import androidx.room.Room;
 
 public class TaskList extends Fragment {
 
-    FloatingActionButton studentFab;
+    FloatingActionButton taskFab;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
 
@@ -49,8 +49,8 @@ public class TaskList extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        studentFab = getView().findViewById(R.id.studentFab);
-        studentFab.setOnClickListener(new View.OnClickListener() {
+        taskFab = getView().findViewById(R.id.taskFab);
+        taskFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), StudentCreator.class);
