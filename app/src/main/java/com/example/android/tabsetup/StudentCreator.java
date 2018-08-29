@@ -236,7 +236,7 @@ public class StudentCreator extends AppCompatActivity {
                             wholeAddress,
                             studentDOB.getText().toString(), genderChoice,
                             stud_course.getText().toString());
-                    db.UserDao().insertAll(newStudent);
+                    db.UserDao().insertAllStudent(newStudent);
                     startActivity(new Intent(StudentCreator.this, MainActivity.class));
                     finish();
                 }

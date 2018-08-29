@@ -10,11 +10,14 @@ import androidx.room.Update;
 
 @Dao
 public interface UserDao {
+
+    //STUDENT TABLE FUNCTIONALITY
+
     @Query("SELECT * FROM Student")
     List<Student> getAllStudents();
 
     @Insert
-    void insertAll(Student... students);
+    void insertAllStudent(Student... students);
 
     @Query("DELETE FROM Student WHERE student_ID = :studentID")
     abstract void deleteStudent(int studentID);
@@ -24,4 +27,21 @@ public interface UserDao {
 
     @Update
     public void updateStudent(Student student);
+
+    //TASK TABLE FUNCTIONALITY
+
+    @Query("SELECT * FROM Task")
+    List<Task> getAllTasks();
+
+    @Insert
+    void insertAllTask(Task... tasks);
+
+    @Query("DELETE FROM Task WHERE task_ID = :taskID")
+    abstract void deleteTask(int taskID);
+
+    @Query("SELECT * FROM Task WHERE task_ID = :taskID")
+    abstract Task getTask(int taskID);
+
+    @Update
+    public void updateTask(Task task);
 }

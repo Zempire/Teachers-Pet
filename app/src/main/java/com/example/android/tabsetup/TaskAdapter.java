@@ -15,31 +15,31 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHolder>{
-    List<Student> students;
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
+    List<Task> tasks;
 
     //For controlling expansion of just 1 ViewHolder.
     private int mExpandedPosition = -1;
     private int previousExpandPosition = -1;
 
     //Constructor for students array.
-    public StudentAdapter(List<Student> students) {
-        this.students = students;
+    public TaskAdapter(List<Task> students) {
+        this.tasks = tasks;
     }
 
     @Override
-    public StudentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.student_row, parent, false);
+    public TaskAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_row, parent, false);
 
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final StudentAdapter.ViewHolder holder, final int position) {
-        holder.firstName.setText(students.get(position).getFirstName());
-        holder.lastName.setText(students.get(position).getLastName());
-        holder.student_ID.setText(students.get(position).getStudent_IDString()); //How to convert to string?
-        holder.student_Address.setText(students.get(position).getAddress());
+    public void onBindViewHolder(final TaskAdapter.ViewHolder holder, final int position) {
+        holder.taskDate.setText(tasks.get(position).getTaskDate());
+        holder.taskName.setText(tasks.get(position).getTaskname());
+        holder.taskDesc.setText(tasks.get(position).getTaskDesc());
+        holder.taskLocation.setText(tasks.get(position).getTaskLocation());
 
         final boolean isExpanded = position==mExpandedPosition;
         holder.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
@@ -60,39 +60,41 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return students.size();
+        return tasks.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView firstName;
-        public TextView lastName;
-        public TextView student_ID;
-        public TextView student_Address;
-        public ConstraintLayout studentContainer, optionsContainer;
-        public Button deleteStudentBtn, viewStudentBtn;
+        public TextView taskID;
+        public TextView taskName;
+        public TextView taskDesc;
+        public TextView taskDate;
+        public TextView taskLocation;
+        public ConstraintLayout taskContainer, optionsContainer;
+        public Button deleteTaskBtn, completeTaskBtn;
 
         AppDatabase db = Room.databaseBuilder(itemView.getContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
         public ViewHolder(View itemView) {
             super(itemView);
-            firstName = itemView.findViewById(R.id.first_name);
-            lastName = itemView.findViewById(R.id.last_name);
-            student_ID = itemView.findViewById(R.id.student_id);
-            student_Address = itemView.findViewById(R.id.student_address);
-            studentContainer = itemView.findViewById(R.id.studentContainer);
+            taskID = itemView.findViewById(R.id.task_ID)
+            taskName = itemView.findViewById(R.id.task_name);
+            taskDesc = itemView.findViewById(R.id.task_desc);
+            taskDate = itemView.findViewById(R.id.task_date);
+            taskLocation = itemView.findViewById(R.id.student_address);
+            taskContainer = itemView.findViewById(R.id.studentContainer);
             optionsContainer = itemView.findViewById(R.id.optionsContainer);
-            deleteStudentBtn = itemView.findViewById(R.id.deleteStudentBtn);
-            viewStudentBtn = itemView.findViewById(R.id.viewStudentBtn);
+            deleteTaskBtn = itemView.findViewById(R.id.deleteStudentBtn);
+            completeTaskBtn = itemView.findViewById(R.id.viewStudentBtn);
 
-            deleteStudentBtn.setOnClickListener(new View.OnClickListener() {
+            deleteTaskBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     delete(getLayoutPosition());
                 }
             });
 
-            viewStudentBtn.setOnClickListener(new View.OnClickListener() {
+            completeTaskBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     update(getAdapterPosition(), view);
