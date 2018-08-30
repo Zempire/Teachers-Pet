@@ -78,7 +78,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         public TextView taskLocation;
         public TextView taskTime;
         public ConstraintLayout taskContainer, optionsContainer;
-        public ImageView deleteTaskBtn, completeTaskBtn;
+        public ImageView completeTaskBtn;
+        public Button deleteTaskBtn;
 
         AppDatabase db = Room.databaseBuilder(itemView.getContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();

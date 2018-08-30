@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#510d18</color>
     <color name="colorAccent">#da0e30</color>
 
+    <color name="unselectedTab">#aaaaaa</color>
     <color name="taskExpanded">#fffff3</color>
     <color name="taskSmall">#ffffff</color>
 
