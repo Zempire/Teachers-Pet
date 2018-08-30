@@ -7,6 +7,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import androidx.room.Room;
 
 public class TaskCreator extends Dialog {
@@ -41,9 +47,17 @@ public class TaskCreator extends Dialog {
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                SimpleDateFormat df = new SimpleDateFormat("kk:mm");
+                String currentTime = df.format(c.getTime());
                 Task newTask = new Task(taskName.getText().toString(),
                         taskDescription.getText().toString(),
-                        "@ " + taskLocation.getText().toString(), "29/08/2018");
+                        "Location: " + taskLocation.getText().toString(),
+                        (day + "/" + (month + 1) + "/" + year), currentTime);
                 db.UserDao().insertAllTask(newTask);
 
                 dismiss();

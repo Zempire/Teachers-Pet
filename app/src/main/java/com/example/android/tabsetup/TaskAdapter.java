@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,9 +45,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         holder.taskName.setText(tasks.get(position).getTaskName());
         holder.taskDesc.setText(tasks.get(position).getTaskDesc());
         holder.taskLocation.setText(tasks.get(position).getTaskLocation());
+        holder.taskTime.setText(tasks.get(position).getTaskTime());
 
         final boolean isExpanded = position==mExpandedPosition;
         holder.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.taskContainer.setBackgroundResource(isExpanded?R.color.taskExpanded:R.color.taskSmall);
         holder.itemView.setActivated(isExpanded);
 
         if (isExpanded)
@@ -73,6 +76,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         public TextView taskDesc;
         public TextView taskDate;
         public TextView taskLocation;
+        public TextView taskTime;
         public ConstraintLayout taskContainer, optionsContainer;
         public ImageView deleteTaskBtn, completeTaskBtn;
 
@@ -85,6 +89,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
             taskName = itemView.findViewById(R.id.task_name);
             taskDesc = itemView.findViewById(R.id.task_desc);
             taskDate = itemView.findViewById(R.id.task_date);
+            taskTime = itemView.findViewById(R.id.task_time);
             taskLocation = itemView.findViewById(R.id.task_location);
             taskContainer = itemView.findViewById(R.id.taskContainer);
             optionsContainer = itemView.findViewById(R.id.optionsContainer);
