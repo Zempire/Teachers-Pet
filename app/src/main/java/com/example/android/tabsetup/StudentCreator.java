@@ -1,8 +1,10 @@
 package com.example.android.tabsetup;
 
 import android.app.DatePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -36,11 +40,15 @@ import static android.R.layout.simple_spinner_dropdown_item;
 public class StudentCreator extends AppCompatActivity {
     EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_post;
     TextView address;
+    ImageView addImage;
     AutoCompleteTextView stud_state, stud_course;
     LinearLayout addressExpanded;
     Button saveStudent, cancelStudent, selectDateBtn;
     DatePickerDialog datePickerDialog;
     RadioGroup gender;
+
+
+    public static final int PICK_IMAGE = 1; //Make sure only one image is chosen.
 
     final String[] STATES = new String[]{
             "State", "NSW", "VIC", "QLD", "NT", "WA", "SA", "TAS", "ACT"};
@@ -186,7 +194,35 @@ public class StudentCreator extends AppCompatActivity {
         saveStudent = findViewById(R.id.save_btn);
         cancelStudent = findViewById(R.id.cancel_btn);
         selectDateBtn = findViewById(R.id.selectDateBtn);
+        addImage = findViewById(R.id.addImage);
 
+        /*
+        Allow user to open images and choose one.
+         */
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                //******call android default gallery
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                //******code for crop image
+                intent.putExtra("crop", "true");
+                intent.putExtra("aspectX", 0);
+                intent.putExtra("aspectY", 0);
+                try {
+                    intent.putExtra("return-data", true);
+                    startActivityForResult(
+                            Intent.createChooser(intent,"Complete action using"),
+                            PICK_IMAGE);
+                } catch (ActivityNotFoundException e) {}
+            }
+        });
+
+        /*
+        Button for selecting the date. Will get the current date and make that the default
+        setting.
+         */
         selectDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,9 +241,16 @@ public class StudentCreator extends AppCompatActivity {
             }
         });
 
+        /*
+        Setup the the database for access;
+         */
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
+
+        /*
+        Save student into the database so long as their student ID is unique.
+         */
         saveStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -243,6 +286,9 @@ public class StudentCreator extends AppCompatActivity {
             }
         });
 
+        /*
+        Scrap what is being done and return to previous activity.
+         */
         cancelStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -250,8 +296,9 @@ public class StudentCreator extends AppCompatActivity {
             }
         });
 
-        /* Give a list of strings to TextViews to allow auto complete option for users.*/
-
+        /*
+        Give a list of strings to TextViews to allow auto complete option for users.
+        */
         ArrayAdapter state_adapter = new ArrayAdapter(this,
                 android.R.layout.simple_dropdown_item_1line, STATES);
         stud_state.setAdapter(state_adapter);
@@ -261,4 +308,15 @@ public class StudentCreator extends AppCompatActivity {
         stud_course.setAdapter(course_adapter);
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE) {
+            Uri imageUri = data.getData();
+            addImage.setImageURI(imageUri);
+            String imagepath = getPath(selectedImageUri);
+            File imageFile = new File(imagepath);
+        }
+    }
+
 }
