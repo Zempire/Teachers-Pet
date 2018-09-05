@@ -213,7 +213,7 @@ public class StudentUpdater extends AppCompatActivity {
         studentID.setEnabled(false);        //This attribute should never change as is primary key.
 
         final int ID = Integer.parseInt(currentStudentID); //Parse to int so we can query the database.
-        currentStudent = db.UserDao().getStudent(ID); //We now have our student as an object again.
+        currentStudent = db.StudentDao().getStudent(ID); //We now have our student as an object again.
 
         List<String> addressArray = Arrays.asList(currentStudent.getAddress().split("\\s*,\\s*"));
         /* TODO: Make sure user inputs all information. */
@@ -249,7 +249,7 @@ public class StudentUpdater extends AppCompatActivity {
                         wholeAddress,
                         studentDOB.getText().toString(), genderChoice,
                         stud_course.getText().toString());
-                db.UserDao().updateStudent(currentStudent);
+                db.StudentDao().updateStudent(currentStudent);
                 startActivity(new Intent(StudentUpdater.this, MainActivity.class));
                 finish();
             }

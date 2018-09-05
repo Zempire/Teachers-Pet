@@ -38,7 +38,7 @@ public class TaskList extends Fragment {
         AppDatabase db = Room.databaseBuilder(getActivity().getApplicationContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
-        List<Task> tasks = db.UserDao().getAllTasks();
+        List<Task> tasks = db.TaskDao().getAllTasks();
 
         recyclerView = rootView.findViewById(R.id.taskRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

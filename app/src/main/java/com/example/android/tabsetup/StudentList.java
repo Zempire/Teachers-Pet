@@ -35,7 +35,7 @@ public class StudentList extends Fragment {
         AppDatabase db = Room.databaseBuilder(getActivity().getApplicationContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
-        List<Student> students = db.UserDao().getAllStudents();
+        List<Student> students = db.StudentDao().getAllStudents();
 
         recyclerView = rootView.findViewById(R.id.studentRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

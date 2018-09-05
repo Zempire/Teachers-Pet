@@ -58,7 +58,7 @@ public class TaskCreator extends Dialog {
                         taskDescription.getText().toString(),
                         "Location: " + taskLocation.getText().toString(),
                         (day + "/" + (month + 1) + "/" + year), currentTime);
-                db.UserDao().insertAllTask(newTask);
+                db.TaskDao().insertAllTask(newTask);
 
                 dismiss();
                 a.recreate();

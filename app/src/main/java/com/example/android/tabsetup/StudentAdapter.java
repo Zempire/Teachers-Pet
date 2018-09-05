@@ -5,11 +5,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
 import java.util.List;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +47,14 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         holder.student_ID.setText(students.get(position).getStudent_IDString()); //How to convert to string?
         holder.student_Address.setText(students.get(position).getAddress());
 
+        String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup/files/Pictures/" + "PROFILE_" + students.get(position).getStudent_IDString() +".jpg";
+        File image = new File(imageFileName);
+        if (image.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
+            holder.profilePic.setImageBitmap(myBitmap);
+        }
+
+
         final boolean isExpanded = position==mExpandedPosition;
         holder.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.itemView.setActivated(isExpanded);
@@ -64,6 +78,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+        public ImageView profilePic;
         public TextView firstName;
         public TextView lastName;
         public TextView student_ID;
@@ -84,6 +99,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
             optionsContainer = itemView.findViewById(R.id.optionsContainer);
             deleteStudentBtn = itemView.findViewById(R.id.deleteStudentBtn);
             viewStudentBtn = itemView.findViewById(R.id.viewStudentBtn);
+            profilePic = itemView.findViewById(R.id.profilePic);
 
             deleteStudentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -110,7 +126,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             students.remove(position);
-                            db.UserDao().deleteStudent(ID);
+                            db.StudentDao().deleteStudent(ID);
                             notifyItemRemoved(position);
                         }
                     }).setNegativeButton("CANCEL", null);

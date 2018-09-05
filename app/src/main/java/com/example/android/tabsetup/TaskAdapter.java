@@ -123,7 +123,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             tasks.remove(position);
-                            db.UserDao().deleteTask(ID);
+                            db.TaskDao().deleteTask(ID);
                             notifyItemRemoved(position);
                         }
                     }).setNegativeButton("CANCEL", null);

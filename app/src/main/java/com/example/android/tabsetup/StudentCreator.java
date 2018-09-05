@@ -1,14 +1,17 @@
 package com.example.android.tabsetup;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -18,37 +21,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.room.Room;
 
-import static android.R.layout.simple_spinner_dropdown_item;
+import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class StudentCreator extends AppCompatActivity {
-    EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_post;
-    TextView address;
-    ImageView addImage;
-    AutoCompleteTextView stud_state, stud_course;
-    LinearLayout addressExpanded;
-    Button saveStudent, cancelStudent, selectDateBtn;
-    DatePickerDialog datePickerDialog;
-    RadioGroup gender;
-
 
     public static final int PICK_IMAGE = 1; //Make sure only one image is chosen.
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     final String[] STATES = new String[]{
             "State", "NSW", "VIC", "QLD", "NT", "WA", "SA", "TAS", "ACT"};
@@ -174,10 +166,23 @@ public class StudentCreator extends AppCompatActivity {
             "Bachelor of Music in Music Education",
             "Bachelor of Science in Veterinary Technology"};
 
+    EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_post;
+    TextView address;
+    ImageView addImage;
+    AutoCompleteTextView stud_state, stud_course;
+    LinearLayout addressExpanded;
+    Button saveStudent, cancelStudent, selectDateBtn;
+    DatePickerDialog datePickerDialog;
+    RadioGroup gender;
+
+    String mCurrentPhotoPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_student);
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
@@ -195,6 +200,8 @@ public class StudentCreator extends AppCompatActivity {
         cancelStudent = findViewById(R.id.cancel_btn);
         selectDateBtn = findViewById(R.id.selectDateBtn);
         addImage = findViewById(R.id.addImage);
+        addImage.setVisibility(View.GONE);
+
 
         /*
         Allow user to open images and choose one.
@@ -202,20 +209,18 @@ public class StudentCreator extends AppCompatActivity {
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                //******call android default gallery
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                //******code for crop image
-                intent.putExtra("crop", "true");
-                intent.putExtra("aspectX", 0);
-                intent.putExtra("aspectY", 0);
-                try {
-                    intent.putExtra("return-data", true);
-                    startActivityForResult(
-                            Intent.createChooser(intent,"Complete action using"),
-                            PICK_IMAGE);
-                } catch (ActivityNotFoundException e) {}
+                dispatchTakePictureIntent();
+                }
+        });
+
+        studentID.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (studentID.getText().toString().length() >= 5) {
+                    addImage.setVisibility(View.VISIBLE);
+                } else {
+                    addImage.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -279,7 +284,7 @@ public class StudentCreator extends AppCompatActivity {
                             wholeAddress,
                             studentDOB.getText().toString(), genderChoice,
                             stud_course.getText().toString());
-                    db.UserDao().insertAllStudent(newStudent);
+                    db.StudentDao().insertAllStudent(newStudent);
                     startActivity(new Intent(StudentCreator.this, MainActivity.class));
                     finish();
                 }
@@ -310,13 +315,68 @@ public class StudentCreator extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_IMAGE) {
-            Uri imageUri = data.getData();
-            addImage.setImageURI(imageUri);
-            String imagepath = getPath(selectedImageUri);
-            File imageFile = new File(imagepath);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK){
+
         }
     }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String imageFileName = "PROFILE_" + studentID.getText().toString();
+        System.out.println("NAMING NEW IMAGE...");
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = new File(storageDir + "/" + imageFileName + ".jpg");
+
+//                File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//                  );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    static final int REQUEST_TAKE_PHOTO = 1;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                System.out.println("WE ARE HERE!");
+//                Bitmap myBitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+//    private void galleryAddPic() {
+//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        System.out.println(mCurrentPhotoPath);
+//        File f = new File(mCurrentPhotoPath);
+//        Uri contentUri = Uri.fromFile(f);
+//        mediaScanIntent.setData(contentUri);
+//        this.sendBroadcast(mediaScanIntent);
+//    }
 
 }
