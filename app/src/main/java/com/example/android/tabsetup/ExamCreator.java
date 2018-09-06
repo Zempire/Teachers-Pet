@@ -50,6 +50,7 @@ public class ExamCreator extends Dialog {
         saveExam = findViewById(R.id.exam_save_btn);
         examDateBtn = findViewById(R.id.examDateBtn);
 
+        examDate.setEnabled(false);
         examDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

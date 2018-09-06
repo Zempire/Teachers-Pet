@@ -126,6 +126,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             students.remove(position);
+                            db.StudentExamDao().delete(ID);
                             db.StudentDao().deleteStudent(ID);
                             notifyItemRemoved(position);
                         }
