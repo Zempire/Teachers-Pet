@@ -7,8 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
+import android.graphics.Color;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,13 +19,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHolder>{
-    List<Student> students;
+    private List<Student> students;
+    private List<Student> selectedStudents = new ArrayList<>();
+    private boolean actionModeActive = false;
 
     //For controlling expansion of just 1 ViewHolder.
     private int mExpandedPosition = -1;
@@ -32,6 +40,42 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
     public StudentAdapter(List<Student> students) {
         this.students = students;
     }
+
+    // Code from http://blog.teamtreehouse.com/contextual-action-bars-removing-items-recyclerview
+    public boolean multiSelect = false;
+    private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            multiSelect = true;
+            menu.add("Delete");
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            for (Student intItems : selectedStudents) {
+                students.remove(intItems);
+            }
+            mode.finish();
+            actionModeActive = false;
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            multiSelect = false;
+            selectedStudents.clear();
+            notifyDataSetChanged();
+            actionModeActive = false;
+
+        }
+    };
+
 
     @Override
     public StudentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,13 +91,14 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         holder.student_ID.setText(students.get(position).getStudent_IDString()); //How to convert to string?
         holder.student_Address.setText(students.get(position).getAddress());
 
-        String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup/files/Pictures/" + "PROFILE_" + students.get(position).getStudent_IDString() +".jpg";
+        // Add a profile image to the student's view.
+        String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup/files/"
+                + "Pictures/" + "PROFILE_" + students.get(position).getStudent_IDString() +".jpg";
         File image = new File(imageFileName);
         if (image.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
             holder.profilePic.setImageBitmap(myBitmap);
         }
-
 
         final boolean isExpanded = position==mExpandedPosition;
         holder.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
@@ -61,15 +106,17 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
 
         if (isExpanded)
             previousExpandPosition = position;
+
+        holder.doSomething(students.get(position));
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1:position;
+                mExpandedPosition = isExpanded ? -1 : position;
                 notifyItemChanged(previousExpandPosition);
                 notifyItemChanged(position);
             }
         });
-
     }
 
     @Override
@@ -145,5 +192,38 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
             ((Activity)context).finish();
         }
 
+        void selectItem(Student item) {
+            if (multiSelect) {
+                if (selectedStudents.contains(item)) {
+                    selectedStudents.remove(item);
+                    studentContainer.setBackgroundColor(Color.WHITE);
+                } else {
+                    studentContainer.setBackgroundColor(Color.LTGRAY);
+                }
+            }
+        }
+
+        void doSomething(final Student value) {
+            if (selectedStudents.contains(value)) {
+                studentContainer.setBackgroundColor(Color.LTGRAY);
+            } else {
+                studentContainer.setBackgroundColor(Color.WHITE);
+            }
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    ((AppCompatActivity)view.getContext()).startActionMode(actionModeCallbacks);
+                    actionModeActive = true;
+                    selectItem(value);
+                    return true;
+                }
+            });
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectItem(value);
+                    }
+                });
+        }
     }
 }

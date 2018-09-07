@@ -4,19 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class TabActivity extends AppCompatActivity {
 
     androidx.appcompat.widget.Toolbar toolbar;
     TabLayout tabLayout;
@@ -28,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_tabs);
 
         toolbar = findViewById(R.id.mainToolbar);
         toolbar.setTitle(getResources().getString(R.string.app_name));
@@ -50,36 +46,36 @@ public class MainActivity extends AppCompatActivity {
 
                 switch(tab.getPosition()) {
                     case 1:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                        toolbar.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
                                 R.color.taskPrimary));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
                                 R.color.taskPrimary));
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,
+                            getWindow().setStatusBarColor(ContextCompat.getColor(TabActivity.this,
                                     R.color.taskPrimary));
                         }
                         drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.task_icon);
                         toolbar.setOverflowIcon(drawable);
                         break;
                     case 2:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                        toolbar.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
                                 R.color.examPrimary));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
                                 R.color.examPrimary));
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,
+                            getWindow().setStatusBarColor(ContextCompat.getColor(TabActivity.this,
                                     R.color.examPrimary));
                         }
                         drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.exam_icon);
                         toolbar.setOverflowIcon(drawable);
                         break;
                     default:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                        toolbar.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
                                 R.color.colorAccent));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
                                 R.color.colorAccent));
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,
+                            getWindow().setStatusBarColor(ContextCompat.getColor(TabActivity.this,
                                     R.color.colorAccent));
                         }
                         drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.student_icon);

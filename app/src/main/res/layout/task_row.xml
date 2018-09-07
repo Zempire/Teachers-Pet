@@ -5,7 +5,7 @@
     android:id="@+id/taskContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="4dp"
+    android:layout_marginVertical="2dp"
     android:background="@android:color/white"
     android:orientation="vertical">
 
@@ -24,11 +24,14 @@
         android:id="@+id/task_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
         android:text="HH:MM:SS"
         android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_date" />
+        app:layout_constraintTop_toBottomOf="@+id/task_date"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/task_name"
@@ -46,12 +49,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/completeTaskBtn"
+    android:id="@+id/completeTaskBtn"
+    android:layout_width="20dp"
+    android:layout_height="20dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="8dp"
+    android:src="@drawable/complete"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/uncompleteTaskBtn"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
-        android:src="@drawable/complete"
+        android:src="@drawable/delete"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,13 +75,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/completeTaskBtn">
+        app:layout_constraintTop_toBottomOf="@+id/task_time">
 
         <TextView
             android:id="@+id/task_desc"
@@ -97,12 +111,11 @@
         <Button
             android:id="@+id/deleteTaskBtn"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_height="28dp"
             android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
             android:text="delete"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/taskPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/task_location" />

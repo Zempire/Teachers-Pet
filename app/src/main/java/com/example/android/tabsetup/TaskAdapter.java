@@ -63,6 +63,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
             }
         });
 
+        //Changes the look depending on if the task is completed or not.
+        holder.taskContainer.setBackgroundResource(tasks.get(position).getTaskStatus() == 1?
+                R.color.completedTask:R.color.taskSmall);
+        holder.completeTaskBtn.setVisibility(tasks.get(position).getTaskStatus() == 1?
+                View.GONE : View.VISIBLE);
+        holder.uncompleteTaskBtn.setVisibility(tasks.get(position).getTaskStatus() == 1?
+                View.VISIBLE : View.GONE);
+
     }
 
     @Override
@@ -78,7 +86,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         public TextView taskLocation;
         public TextView taskTime;
         public ConstraintLayout taskContainer, optionsContainer;
-        public ImageView completeTaskBtn;
+        public ImageView completeTaskBtn, uncompleteTaskBtn;
         public Button deleteTaskBtn;
 
         AppDatabase db = Room.databaseBuilder(itemView.getContext(), AppDatabase.class,
@@ -96,6 +104,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
             optionsContainer = itemView.findViewById(R.id.optionsContainer);
             deleteTaskBtn = itemView.findViewById(R.id.deleteTaskBtn);
             completeTaskBtn = itemView.findViewById(R.id.completeTaskBtn);
+            uncompleteTaskBtn = itemView.findViewById(R.id.uncompleteTaskBtn);
 
             deleteTaskBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -107,12 +116,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
             completeTaskBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    update(getAdapterPosition(), view);
+                    completeTask(getLayoutPosition());
+                }
+            });
+
+            uncompleteTaskBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    uncompleteTask(getLayoutPosition());
                 }
             });
         }
-
-
 
         public void delete(final int position) {
             final int ID = Integer.parseInt(taskID.getText().toString());
@@ -133,13 +147,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
 
         }
 
-//        public void update(int position, View view) {
-//            Context context = view.getContext();
-//            Intent intent = new Intent(context, StudentUpdater.class);
-//            intent.putExtra("STUDENT_ID", student_ID.getText().toString());
-//            context.startActivity(intent);
-//            ((Activity)context).finish();
-//        }
+        public void completeTask(int position) {
+            tasks.get(position).setTaskStatus(1);
+            db.TaskDao().updateTask(tasks.get(position));
+            tasks.remove(position);
+            notifyItemRemoved(position);
+        }
+
+        public void uncompleteTask(int position) {
+            tasks.get(position).setTaskStatus(0);
+            db.TaskDao().updateTask(tasks.get(position));
+            notifyDataSetChanged();
+        }
 
     }
 }

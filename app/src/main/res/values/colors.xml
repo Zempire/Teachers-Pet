@@ -5,12 +5,13 @@
     <color name="colorAccent">#da0e30</color>
 
     <color name="unselectedTab">#aaaaaa</color>
-    <color name="taskExpanded">#fffff3</color>
+    <color name="taskExpanded">#efefef</color>
     <color name="taskSmall">#ffffff</color>
 
     <color name="taskPrimary">#2493d2</color>
     <color name="taskPrimaryDark">#124e70</color>
     <color name="taskAccent">#88d4ff</color>
+    <color name="completedTask">#9c599664</color>
 
     <color name="examPrimary">#ffea00</color>
     <color name="examPrimaryDark">#787205</color>

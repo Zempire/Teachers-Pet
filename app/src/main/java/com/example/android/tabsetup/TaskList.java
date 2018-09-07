@@ -2,6 +2,7 @@ package com.example.android.tabsetup;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -33,15 +34,17 @@ public class TaskList extends Fragment {
     FloatingActionButton taskFab;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
+    List<Task> tasks;
+    AppDatabase db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_task_tab, container, false);
 
-        AppDatabase db = Room.databaseBuilder(getActivity().getApplicationContext(), AppDatabase.class,
+        db = Room.databaseBuilder(getContext().getApplicationContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
-        List<Task> tasks = db.TaskDao().getAllTasks();
+        tasks = db.TaskDao().getUncompletedTasks();
 
         recyclerView = rootView.findViewById(R.id.taskRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -75,7 +78,20 @@ public class TaskList extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+            switch(item.getItemId()) {
+                case R.id.action_show_complete:
+                    tasks = db.TaskDao().getAllTasks();
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    adapter = new TaskAdapter(tasks);
+                    recyclerView.setAdapter(adapter);
+                    break;
+                case R.id.action_hide_complete:
+                    tasks = db.TaskDao().getUncompletedTasks();
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    adapter = new TaskAdapter(tasks);
+                    recyclerView.setAdapter(adapter);
+                    break;
+            }
         return true;
     }
 }

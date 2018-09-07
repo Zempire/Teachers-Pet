@@ -9,8 +9,11 @@ import androidx.room.Update;
 
 @Dao
 public interface TaskDao {
-    @Query("SELECT * FROM Task")
+    @Query("SELECT * FROM Task ORDER by task_status")
     List<Task> getAllTasks();
+
+    @Query("SELECT * FROM Task WHERE task_status = 0 ORDER by task_status")
+    List<Task> getUncompletedTasks();
 
     @Insert
     void insertAllTask(Task... tasks);

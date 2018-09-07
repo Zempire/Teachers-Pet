@@ -3,14 +3,10 @@ package com.example.android.tabsetup;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -24,18 +20,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.room.Room;
-
-import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class StudentCreator extends AppCompatActivity {
 
@@ -285,7 +276,7 @@ public class StudentCreator extends AppCompatActivity {
                             studentDOB.getText().toString(), genderChoice,
                             stud_course.getText().toString());
                     db.StudentDao().insertAllStudent(newStudent);
-                    startActivity(new Intent(StudentCreator.this, MainActivity.class));
+                    startActivity(new Intent(StudentCreator.this, TabActivity.class));
                     finish();
                 }
             }
