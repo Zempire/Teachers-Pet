@@ -7,29 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Toolbar
-        android:id="@+id/toolbar"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorAccent">
+        android:background="?attr/colorAccent"
+        android:theme="?actionBarTheme"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginEnd="150dp"
-            android:src="@drawable/headerlogo" />
-
-    </Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        app:tabBackground="@drawable/student_tab_color"
+        android:background="@color/colorAccent"
         app:tabSelectedTextColor="@android:color/white"
-        app:tabIndicator="@color/colorPrimaryDark"
-        app:tabTextColor="@color/unselectedTab">
+        app:tabIndicatorColor="@android:color/black"
+        app:tabTextColor="@color/unselectedTab"
+        app:tabIndicatorHeight="2dp">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabStudents"

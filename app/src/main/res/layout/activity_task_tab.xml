@@ -29,6 +29,8 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:src="@drawable/plus"
+        android:backgroundTint="@color/taskPrimary"
+        app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

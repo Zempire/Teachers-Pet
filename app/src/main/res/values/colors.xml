@@ -8,4 +8,13 @@
     <color name="taskExpanded">#fffff3</color>
     <color name="taskSmall">#ffffff</color>
 
+    <color name="taskPrimary">#2493d2</color>
+    <color name="taskPrimaryDark">#124e70</color>
+    <color name="taskAccent">#88d4ff</color>
+
+    <color name="examPrimary">#ffea00</color>
+    <color name="examPrimaryDark">#787205</color>
+    <color name="examAccent">#fffba9</color>
+
+
 </resources>

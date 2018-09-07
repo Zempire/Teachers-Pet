@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -17,18 +18,20 @@ import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
+    androidx.appcompat.widget.Toolbar toolbar;
     TabLayout tabLayout;
     ViewPager viewPager;
     PageAdapter pageAdapter;
     TabItem tabStudent, tabExam, tabTask;
+    Drawable drawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.mainToolbar);
+        toolbar.setTitle(getResources().getString(R.string.app_name));
         setSupportActionBar(toolbar);
 
         tabLayout = findViewById(R.id.tab_layout);
@@ -47,10 +50,40 @@ public class MainActivity extends AppCompatActivity {
 
                 switch(tab.getPosition()) {
                     case 1:
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                                R.color.taskPrimary));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                                R.color.taskPrimary));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,
+                                    R.color.taskPrimary));
+                        }
+                        drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.task_icon);
+                        toolbar.setOverflowIcon(drawable);
                         break;
                     case 2:
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                                R.color.examPrimary));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                                R.color.examPrimary));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,
+                                    R.color.examPrimary));
+                        }
+                        drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.exam_icon);
+                        toolbar.setOverflowIcon(drawable);
                         break;
                     default:
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                                R.color.colorAccent));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+                                R.color.colorAccent));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,
+                                    R.color.colorAccent));
+                        }
+                        drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.student_icon);
+                        toolbar.setOverflowIcon(drawable);
                         break;
                 }
             }

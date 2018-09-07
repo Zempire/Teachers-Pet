@@ -79,7 +79,7 @@
             android:backgroundTint="@android:color/transparent"
             android:text="choose"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/examPrimaryDark" />
     </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/colorAccent"
+                android:background="@color/examPrimary"
                 android:text="CANCEL"
                 android:textColor="@android:color/white" />
 
@@ -126,7 +126,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/colorAccent"
+                android:background="@color/examPrimary"
                 android:text="SAVE"
                 android:textColor="@android:color/white" />
         </LinearLayout>
