@@ -2,6 +2,8 @@ package com.example.android.tabsetup;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -9,11 +11,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -23,11 +27,11 @@ import androidx.room.Room;
 
 public class StudentUpdater extends AppCompatActivity {
     EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_post;
-    TextView address;
     AutoCompleteTextView stud_state, stud_course;
     LinearLayout addressExpanded;
     Button saveStudent, cancelStudent, selectDateBtn;
     DatePickerDialog datePickerDialog;
+    ImageView addImage;
     RadioGroup gender;
     Student currentStudent;
     String currentStudentID;
@@ -179,9 +183,12 @@ public class StudentUpdater extends AppCompatActivity {
         addressExpanded = findViewById(R.id.addressLayout);
         stud_state = findViewById(R.id.stud_state);
         stud_course = findViewById(R.id.course);
+        addImage = findViewById(R.id.addImage);
         saveStudent = findViewById(R.id.save_btn);
         cancelStudent = findViewById(R.id.cancel_btn);
         selectDateBtn = findViewById(R.id.selectDateBtn);
+
+        studentDOB.setEnabled(false);
 
         selectDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,28 +215,51 @@ public class StudentUpdater extends AppCompatActivity {
         final int ID = Integer.parseInt(currentStudentID); //Parse to int so we can query the database.
         currentStudent = db.StudentDao().getStudent(ID); //We now have our student as an object again.
 
-        List<String> addressArray = Arrays.asList(currentStudent.getAddress().split("\\s*,\\s*"));
+        List<String> addressArray = Arrays.asList(currentStudent.getAddress().split(" "));
         /* TODO: Make sure user inputs all information. */
         firstName.setText(currentStudent.getFirstName());
         lastName.setText(currentStudent.getLastName());
 
-        if (addressArray.size() > 3) {
-            stud_street.setText(addressArray.get(0));
-            stud_city.setText(addressArray.get(1));
-            stud_state.setText(addressArray.get(2));
-            stud_post.setText(addressArray.get(3));
+        // Add the profile image to the view.
+        String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup" +
+                "/files/" + "Pictures/" + "PROFILE_" + currentStudent.getStudent_ID() +".jpg";
+        File image = new File(imageFileName);
+        if (image.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
+            addImage.setImageBitmap(myBitmap);
+        }
+
+        if (addressArray.size() > 5) {
+            stud_street.setText(addressArray.get(0) + " " + addressArray.get(1) + " " + addressArray.get(2));
+            stud_city.setText(addressArray.get(3));
+            stud_state.setText(addressArray.get(4));
+            stud_post.setText(addressArray.get(5));
         }
         studentDOB.setText(currentStudent.getDob());
         stud_course.setText(currentStudent.getCourse());
 
-        //TODO: Make sure information from gender radiobutton carries over.
+        //Make sure the correct radio is selected upon opening the updater.
+        String myGender = currentStudent.getGender();
+        switch(myGender) {
+            case "Male":
+                gender.check(R.id.maleRadio);
+                break;
+            case "Female":
+                gender.check(R.id.femaleRadio);
+                break;
+            case "Other":
+                gender.check(R.id.otherRadio);
+                break;
+            default:
+                break;
+        }
 
         saveStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String wholeAddress = stud_street.getText().toString() + ", " +
-                        stud_city.getText().toString() + ", " +
-                        stud_state.getText().toString() + ", " +
+                String wholeAddress = stud_street.getText().toString() + " " +
+                        stud_city.getText().toString() + " " +
+                        stud_state.getText().toString() + " " +
                         stud_post.getText().toString();
                 String genderChoice = "";
                 if (gender.getCheckedRadioButtonId()!=-1) {
@@ -237,7 +267,7 @@ public class StudentUpdater extends AppCompatActivity {
                             .getText().toString();
                 }
 
-                currentStudent =  new Student(ID, firstName.getText().toString(),
+                currentStudent = new Student(ID, firstName.getText().toString(),
                         lastName.getText().toString(),
                         wholeAddress,
                         studentDOB.getText().toString(), genderChoice,

@@ -12,6 +12,9 @@ public interface StudentDao {
     @Query("SELECT * FROM Student")
     List<Student> getAllStudents();
 
+    @Query("SELECT * FROM Student ORDER by last_name")
+    List<Student> getByName();
+
     @Insert
     void insertAllStudent(Student... students);
 

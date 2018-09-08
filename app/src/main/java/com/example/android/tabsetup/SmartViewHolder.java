@@ -90,6 +90,7 @@ public class SmartViewHolder extends RecyclerView.ViewHolder {
         student_ID.setText(Integer.toString(item.getStudent_ID()));
         student_address.setText(item.getAddress());
         gender.setText(item.getGender());
+        dateOfBirth.setText(item.getDob());
 
         // Add a profile image to the student's view.
         String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup" +

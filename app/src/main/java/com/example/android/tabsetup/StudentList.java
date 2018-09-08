@@ -2,6 +2,7 @@ package com.example.android.tabsetup;
 
         import android.app.Activity;
         import android.app.AlertDialog;
+        import android.content.Context;
         import android.content.DialogInterface;
         import android.content.Intent;
         import android.graphics.drawable.Drawable;
@@ -80,7 +81,18 @@ public class StudentList extends Fragment implements SmartViewHolder.StudentList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        switch(item.getItemId()) {
+            case R.id.action_order_name:
+                students = db.StudentDao().getByName();
+                adapter.updateItems(students);
+                break;
+            case R.id.action_order_id:
+                students = db.StudentDao().getAllStudents();
+                adapter.updateItems(students);
+                break;
+            default:
+                break;
+        }
         return true;
     }
 
@@ -106,7 +118,11 @@ public class StudentList extends Fragment implements SmartViewHolder.StudentList
 
     @Override
     public void updateStudent(Student item) {
-
+        Context context = getContext();
+        Intent intent = new Intent(context, StudentUpdater.class);
+        intent.putExtra("STUDENT_ID", Integer.toString(item.getStudent_ID()));
+        context.startActivity(intent);
+        ((Activity)context).finish();
     }
 
     @Override
