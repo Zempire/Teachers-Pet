@@ -3,6 +3,9 @@ package com.example.android.tabsetup;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,7 +23,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Calendar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -168,12 +173,15 @@ public class StudentCreator extends AppCompatActivity {
 
     String mCurrentPhotoPath;
 
+    static final int REQUEST_TAKE_PHOTO = 1;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_student);
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
@@ -191,12 +199,11 @@ public class StudentCreator extends AppCompatActivity {
         cancelStudent = findViewById(R.id.cancel_btn);
         selectDateBtn = findViewById(R.id.selectDateBtn);
         addImage = findViewById(R.id.addImage);
-        addImage.setVisibility(View.GONE);
+        addImage.setEnabled(false);
+        addImage.setImageAlpha(50);
+        studentDOB.setEnabled(false);
 
-
-        /*
-        Allow user to open images and choose one.
-         */
+        //Allow user to open images and choose one.
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,17 +215,18 @@ public class StudentCreator extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (studentID.getText().toString().length() >= 5) {
-                    addImage.setVisibility(View.VISIBLE);
+                    addImage.setEnabled(true);
+                    addImage.setImageAlpha(255);
                 } else {
-                    addImage.setVisibility(View.GONE);
+                    addImage.setEnabled(false);
+                    addImage.setImageAlpha(50);
                 }
             }
         });
 
-        /*
-        Button for selecting the date. Will get the current date and make that the default
-        setting.
-         */
+
+        //Button for selecting the date. Will get the current date and make that the default
+        // setting.
         selectDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -237,16 +245,12 @@ public class StudentCreator extends AppCompatActivity {
             }
         });
 
-        /*
-        Setup the the database for access;
-         */
+        //Setup database for access.
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
 
-        /*
-        Save student into the database so long as their student ID is unique.
-         */
+        //Save student into the database and make sure the id is unique.
         saveStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -260,9 +264,9 @@ public class StudentCreator extends AppCompatActivity {
                     alert.show();
                 } else {
                     int id = Integer.parseInt(ID);
-                    String wholeAddress = stud_street.getText().toString() + ", " +
-                            stud_city.getText().toString() + ", " +
-                            stud_state.getText().toString() + ", " +
+                    String wholeAddress = stud_street.getText().toString() + " " +
+                            stud_city.getText().toString() + " " +
+                            stud_state.getText().toString() + " " +
                             stud_post.getText().toString();
                     String genderChoice = "";
                     if (gender.getCheckedRadioButtonId() != -1) {
@@ -310,28 +314,18 @@ public class StudentCreator extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK){
+            addImage.setImageBitmap(createProfilePic());
         }
     }
 
     private File createImageFile() throws IOException {
         // Create an image file name
         String imageFileName = "PROFILE_" + studentID.getText().toString();
-        System.out.println("NAMING NEW IMAGE...");
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = new File(storageDir + "/" + imageFileName + ".jpg");
-
-//                File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//                  );
-
-        // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
-    static final int REQUEST_TAKE_PHOTO = 1;
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -346,8 +340,6 @@ public class StudentCreator extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                System.out.println("WE ARE HERE!");
-//                Bitmap myBitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
 
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
@@ -357,5 +349,46 @@ public class StudentCreator extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
+    }
+
+    Bitmap createProfilePic() {
+        String imageFileName = "PROFILE_" + studentID.getText().toString();
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = new File(storageDir + "/" + imageFileName + ".jpg");
+        Bitmap finalOut = null;
+        if (image.exists()) {
+            //Open output stream.
+            OutputStream outStream = null;
+
+            //Create Bitmap from file.
+            Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
+            image.delete();
+
+            //Rotate the Bitmap and set its dimensions to whichever dimension is smallest.
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+
+            //https://stackoverflow.com/questions/6908604/android-crop-center-of-bitmap
+            // Crops image depending on height vs width.
+            if (myBitmap.getWidth() >= myBitmap.getHeight()){
+                finalOut = Bitmap.createBitmap(myBitmap,
+                        myBitmap.getWidth()/2 - myBitmap.getHeight()/2, 0,
+                        myBitmap.getHeight(), myBitmap.getHeight(), matrix, true);
+
+            } else {
+                finalOut = Bitmap.createBitmap(myBitmap,
+                        0, myBitmap.getHeight()/2 - myBitmap.getWidth()/2,
+                        myBitmap.getWidth(), myBitmap.getWidth(), matrix, true);
+            }
+            try {
+                outStream = new FileOutputStream(image);
+                finalOut.compress(Bitmap.CompressFormat.JPEG, 60, outStream);
+                outStream.flush();
+                outStream.close();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return finalOut;
     }
 }

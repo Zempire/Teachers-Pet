@@ -11,12 +11,14 @@ import android.graphics.Color;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,11 +32,8 @@ import androidx.room.Room;
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHolder>{
     private List<Student> students;
     private List<Student> selectedStudents = new ArrayList<>();
-    private boolean actionModeActive = false;
 
     //For controlling expansion of just 1 ViewHolder.
-    private int mExpandedPosition = -1;
-    private int previousExpandPosition = -1;
 
     //Constructor for students array.
     public StudentAdapter(List<Student> students) {
@@ -47,7 +46,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             multiSelect = true;
-            menu.add("Delete");
+            mode.getMenuInflater().inflate(R.menu.menu_student, menu);
             return true;
         }
 
@@ -62,7 +61,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                 students.remove(intItems);
             }
             mode.finish();
-            actionModeActive = false;
             return true;
         }
 
@@ -71,8 +69,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
             multiSelect = false;
             selectedStudents.clear();
             notifyDataSetChanged();
-            actionModeActive = false;
-
         }
     };
 
@@ -86,9 +82,8 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final StudentAdapter.ViewHolder holder, final int position) {
-        holder.firstName.setText(students.get(position).getFirstName());
-        holder.lastName.setText(students.get(position).getLastName());
-        holder.student_ID.setText(students.get(position).getStudent_IDString()); //How to convert to string?
+        holder.studentName.setText(students.get(position).getFirstName() + " " + students.get(position).getLastName());
+        holder.student_ID.setText(Integer.toString(students.get(position).getStudent_ID()));
         holder.student_Address.setText(students.get(position).getAddress());
 
         // Add a profile image to the student's view.
@@ -100,23 +95,8 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
             holder.profilePic.setImageBitmap(myBitmap);
         }
 
-        final boolean isExpanded = position==mExpandedPosition;
-        holder.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        holder.itemView.setActivated(isExpanded);
-
-        if (isExpanded)
-            previousExpandPosition = position;
-
         holder.doSomething(students.get(position));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1 : position;
-                notifyItemChanged(previousExpandPosition);
-                notifyItemChanged(position);
-            }
-        });
     }
 
     @Override
@@ -126,20 +106,19 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView profilePic;
-        public TextView firstName;
-        public TextView lastName;
+        public TextView studentName;
         public TextView student_ID;
         public TextView student_Address;
         public ConstraintLayout studentContainer, optionsContainer;
         public Button deleteStudentBtn, viewStudentBtn;
+        public ToggleButton toggleStudentInfo;
 
         AppDatabase db = Room.databaseBuilder(itemView.getContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
-            firstName = itemView.findViewById(R.id.first_name);
-            lastName = itemView.findViewById(R.id.last_name);
+            studentName = itemView.findViewById(R.id.studentName);
             student_ID = itemView.findViewById(R.id.student_id);
             student_Address = itemView.findViewById(R.id.student_address);
             studentContainer = itemView.findViewById(R.id.studentContainer);
@@ -147,6 +126,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
             deleteStudentBtn = itemView.findViewById(R.id.deleteStudentBtn);
             viewStudentBtn = itemView.findViewById(R.id.viewStudentBtn);
             profilePic = itemView.findViewById(R.id.profilePic);
+            toggleStudentInfo = itemView.findViewById(R.id.toggleStudentInfo);
 
             deleteStudentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -161,6 +141,17 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                     update(getAdapterPosition(), view);
                 }
             });
+
+            toggleStudentInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (optionsContainer.getVisibility() == View.GONE) {
+                        optionsContainer.setVisibility(View.VISIBLE);
+                    } else {
+                        optionsContainer.setVisibility(View.GONE);
+                    }
+                }
+            });
         }
 
 
@@ -173,7 +164,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             students.remove(position);
-                            db.StudentExamDao().delete(ID);
+                            db.StudentExamDao().deleteStudent(ID);
                             db.StudentDao().deleteStudent(ID);
                             notifyItemRemoved(position);
                         }
@@ -198,14 +189,15 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                     selectedStudents.remove(item);
                     studentContainer.setBackgroundColor(Color.WHITE);
                 } else {
-                    studentContainer.setBackgroundColor(Color.LTGRAY);
+                    selectedStudents.add(item);
+                    studentContainer.setBackgroundColor(Color.DKGRAY);
                 }
             }
         }
 
         void doSomething(final Student value) {
             if (selectedStudents.contains(value)) {
-                studentContainer.setBackgroundColor(Color.LTGRAY);
+                studentContainer.setBackgroundColor(Color.DKGRAY);
             } else {
                 studentContainer.setBackgroundColor(Color.WHITE);
             }
@@ -213,12 +205,11 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                 @Override
                 public boolean onLongClick(View view) {
                     ((AppCompatActivity)view.getContext()).startActionMode(actionModeCallbacks);
-                    actionModeActive = true;
                     selectItem(value);
                     return true;
                 }
             });
-                itemView.setOnClickListener(new View.OnClickListener() {
+                studentContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         selectItem(value);

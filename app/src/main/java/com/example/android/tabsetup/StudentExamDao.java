@@ -19,7 +19,7 @@ public interface StudentExamDao {
     List<StudentResult> getResults(int exam_ID);
 
     @Query("DELETE FROM StudentExam WHERE studentID = :studentID")
-    abstract void delete(int studentID);
+    abstract void deleteStudent(int studentID);
 
     @Query("DELETE FROM StudentExam WHERE examID = :examID")
     abstract void deleteExam(int examID);

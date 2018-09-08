@@ -13,9 +13,9 @@
     <color name="taskAccent">#88d4ff</color>
     <color name="completedTask">#9c599664</color>
 
-    <color name="examPrimary">#ffea00</color>
-    <color name="examPrimaryDark">#787205</color>
-    <color name="examAccent">#fffba9</color>
+    <color name="examPrimary">#52a66b</color>
+    <color name="examPrimaryDark">#215932</color>
+    <color name="examAccent">#64f990</color>
 
 
 </resources>

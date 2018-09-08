@@ -37,7 +37,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
     public void onBindViewHolder(final ExamAdapter.ViewHolder holder, final int position) {
         holder.examID.setText(Integer.toString(exams.get(position).getExam_ID()));
         holder.examName.setText(exams.get(position).getExamName());
-        holder.examLocation.setText("Location: " + exams.get(position).getExamLocation());
+        holder.examLocation.setText(exams.get(position).getExamLocation());
         holder.examDateTime.setText(exams.get(position).getDateTime());
 
         AppDatabase db = Room.databaseBuilder(holder.examName.getContext(), AppDatabase.class,

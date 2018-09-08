@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ public class TabActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.mainToolbar);
         toolbar.setTitle(getResources().getString(R.string.app_name));
+        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         tabLayout = findViewById(R.id.tab_layout);

@@ -56,7 +56,7 @@ public class TaskCreator extends Dialog {
                 String currentTime = df.format(c.getTime());
                 Task newTask = new Task(taskName.getText().toString(),
                         taskDescription.getText().toString(),
-                        "Location: " + taskLocation.getText().toString(),
+                        taskLocation.getText().toString(),
                         (day + "/" + (month + 1) + "/" + year), currentTime);
                 db.TaskDao().insertAllTask(newTask);
 
