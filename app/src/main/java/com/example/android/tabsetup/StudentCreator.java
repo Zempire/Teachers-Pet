@@ -200,7 +200,7 @@ public class StudentCreator extends AppCompatActivity {
         selectDateBtn = findViewById(R.id.selectDateBtn);
         addImage = findViewById(R.id.addImage);
         addImage.setEnabled(false);
-        addImage.setImageAlpha(50);
+        addImage.setImageAlpha(10);
         studentDOB.setEnabled(false);
 
         //Allow user to open images and choose one.
@@ -219,7 +219,7 @@ public class StudentCreator extends AppCompatActivity {
                     addImage.setImageAlpha(255);
                 } else {
                     addImage.setEnabled(false);
-                    addImage.setImageAlpha(50);
+                    addImage.setImageAlpha(10);
                 }
             }
         });
