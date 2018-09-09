@@ -51,9 +51,9 @@ public class StudentList extends Fragment implements SmartViewHolder.StudentList
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new SuperChillAdapter(getLayoutInflater(), this);
         recyclerView.setAdapter(adapter);
-
         students = db.StudentDao().getAllStudents();
         adapter.updateItems(students);
+
 
         studentFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,5 +131,10 @@ public class StudentList extends Fragment implements SmartViewHolder.StudentList
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
+    }
+
+    @Override
+    public void deleteMultiple(List<Student> students) {
+
     }
 }

@@ -18,6 +18,11 @@ public class SuperChillAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
     private SmartViewHolder.StudentListener studentListener;
 
+    //For controlling expansion of just 1 ViewHolder.
+    private int mExpandedPosition = -1;
+    private int previousExpandPosition = -1;
+
+
     public SuperChillAdapter(LayoutInflater inflater, SmartViewHolder.StudentListener studentListener) {
         this.inflater = inflater;
         this.studentListener = studentListener;
@@ -61,9 +66,23 @@ public class SuperChillAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         SmartViewHolder vh = (SmartViewHolder) holder;
         vh.setItem(items.get(position));
+        final boolean isExpanded = position==mExpandedPosition;
+        vh.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        vh.toggleStudentInfo.setChecked(isExpanded?true:false);
+
+        if (isExpanded)
+            previousExpandPosition = position;
+        vh.toggleStudentInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mExpandedPosition = isExpanded ? -1:position;
+                notifyItemChanged(previousExpandPosition);
+                notifyItemChanged(position);
+            }
+        });
     }
 
     @Override

@@ -6,12 +6,15 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.io.File;
+import java.util.List;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,15 +27,17 @@ public class SmartViewHolder extends RecyclerView.ViewHolder {
     TextView dateOfBirth;
     ConstraintLayout studentContainer, optionsContainer;
     Button deleteStudentBtn, viewStudentBtn;
-    Student item;
-    StudentListener listener;
     ToggleButton toggleStudentInfo;
     ImageView profilePic;
 
+    Student item;
+    StudentListener listener;
+
     public interface StudentListener{
-        void  deleteStudent(Student item);
+        void deleteStudent(Student item);
         void updateStudent(Student item);
         void openMaps(Student item);
+        void deleteMultiple(List<Student> students);
     }
 
     public SmartViewHolder(View itemView, final StudentListener listener) {
@@ -53,17 +58,14 @@ public class SmartViewHolder extends RecyclerView.ViewHolder {
 
         deleteStudentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                listener.deleteStudent(item);
+            public void onClick(View view) { listener.deleteStudent(item);
             }
         });
         viewStudentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                listener.updateStudent(item);
+            public void onClick(View view) { listener.updateStudent(item);
             }
         });
-
         student_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,16 +73,6 @@ public class SmartViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        toggleStudentInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (optionsContainer.getVisibility() == View.GONE) {
-                    optionsContainer.setVisibility(View.VISIBLE);
-                } else {
-                    optionsContainer.setVisibility(View.GONE);
-                }
-            }
-        });
     }
 
     public void setItem(Student item) {

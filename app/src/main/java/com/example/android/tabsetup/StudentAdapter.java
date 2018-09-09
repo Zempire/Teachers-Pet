@@ -95,7 +95,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
             holder.profilePic.setImageBitmap(myBitmap);
         }
 
-        holder.doSomething(students.get(position));
+        holder.multiDelete(students.get(position));
 
     }
 
@@ -195,7 +195,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
             }
         }
 
-        void doSomething(final Student value) {
+        void multiDelete(final Student value) {
             if (selectedStudents.contains(value)) {
                 studentContainer.setBackgroundColor(Color.DKGRAY);
             } else {
