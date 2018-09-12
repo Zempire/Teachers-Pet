@@ -1,10 +1,7 @@
 package com.example.android.tabsetup;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,9 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -41,7 +36,7 @@ public class TaskList extends Fragment implements TaskViewHolder.TaskListener, V
     FloatingActionButton taskFab;
     TextView toolbarText;
     RecyclerView recyclerView;
-    NewTaskAdapter adapter;
+    TaskAdapter adapter;
     AppDatabase db;
     List<Task> tasks;
     List<Task> selectedTasks = new ArrayList<>();
@@ -66,7 +61,7 @@ public class TaskList extends Fragment implements TaskViewHolder.TaskListener, V
                 "production").allowMainThreadQueries().build();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new NewTaskAdapter(getLayoutInflater(), this, this);
+        adapter = new TaskAdapter(getLayoutInflater(), this, this);
         recyclerView.setAdapter(adapter);
         tasks = db.TaskDao().getUncompletedTasks();
         adapter.updateItems(tasks);

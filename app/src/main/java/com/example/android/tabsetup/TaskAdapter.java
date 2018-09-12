@@ -9,7 +9,7 @@ import java.util.List;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class NewTaskAdapter extends RecyclerView.Adapter {
+public class TaskAdapter extends RecyclerView.Adapter {
     private List<Task> items;
     private LayoutInflater inflater;
     private TaskViewHolder.TaskListener taskListener;
@@ -21,7 +21,7 @@ public class NewTaskAdapter extends RecyclerView.Adapter {
     private int previousExpandPosition = -1;
 
 
-    public NewTaskAdapter(LayoutInflater inflater, TaskViewHolder.TaskListener taskListener, TaskList taskList) {
+    public TaskAdapter(LayoutInflater inflater, TaskViewHolder.TaskListener taskListener, TaskList taskList) {
         this.inflater = inflater;
         this.taskListener = taskListener;
         this.taskList = taskList;

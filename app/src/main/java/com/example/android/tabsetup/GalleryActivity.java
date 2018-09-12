@@ -1,22 +1,16 @@
 package com.example.android.tabsetup;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.widget.Toolbar;
-
-import com.google.android.material.tabs.TabItem;
-import com.google.android.material.tabs.TabLayout;
+import android.view.Window;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,5 +45,15 @@ public class GalleryActivity extends AppCompatActivity implements GalleryViewHol
         adapter = new GalleryAdapter(getLayoutInflater(), this, this);
         recyclerView.setAdapter(adapter);
         adapter.updateItems(images);
+    }
+
+    @Override
+    public void expandImage(Bitmap myBitmap) {
+        GalleryViewer newImage = new GalleryViewer(this, myBitmap);
+        Window window = newImage.getWindow();
+        newImage.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        newImage.setCancelable(false);
+        newImage.show();
+        window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
     }
 }

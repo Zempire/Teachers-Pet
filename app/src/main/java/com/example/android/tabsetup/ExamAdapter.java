@@ -1,125 +1,113 @@
 package com.example.android.tabsetup;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import java.util.ArrayList;
 import java.util.List;
-import androidx.constraintlayout.widget.ConstraintLayout;
+
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
-    List<Exam> exams;
+public class ExamAdapter extends RecyclerView.Adapter {
+    private List<Exam> items;
+    private LayoutInflater inflater;
+    private ExamViewHolder.ExamListener examListener;
+    ExamList examList;
+    ExamViewHolder eh;
+
+    AppDatabase db;
     List<StudentResult> results;
 
     //For controlling expansion of just 1 ViewHolder.
     private int mExpandedPosition = -1;
     private int previousExpandPosition = -1;
 
-    //Constructor for exams array.
-    public ExamAdapter(List<Exam> exams) {
-        this.exams = exams;
+
+    public ExamAdapter(LayoutInflater inflater, ExamViewHolder.ExamListener examListener, ExamList examList) {
+        this.inflater = inflater;
+        this.examListener = examListener;
+        this.examList = examList;
+        items = new ArrayList<>();
+    }
+
+    public void updateItems(final List<Exam> newItems) {
+        final List<Exam> oldItems = new ArrayList<>(this.items);
+        this.items.clear();
+        if (newItems != null) {
+            this.items.addAll(newItems);
+        }
+        DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldItems.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return items.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return oldItems.get(oldItemPosition).equals(newItems.get(newItemPosition));
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return oldItems.get(oldItemPosition).equals(newItems.get(newItemPosition));
+            }
+        }).dispatchUpdatesTo(this);
+
     }
 
     @Override
-    public ExamAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.exam_row, parent, false);
-
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = inflater.inflate(R.layout.exam_row, parent, false);
+        return new ExamViewHolder(v, examListener, examList);
     }
 
     @Override
-    public void onBindViewHolder(final ExamAdapter.ViewHolder holder, final int position) {
-        holder.examID.setText(Integer.toString(exams.get(position).getExam_ID()));
-        holder.examName.setText(exams.get(position).getExamName());
-        holder.examLocation.setText(exams.get(position).getExamLocation());
-        holder.examDateTime.setText(exams.get(position).getDateTime());
-
-        AppDatabase db = Room.databaseBuilder(holder.examName.getContext(), AppDatabase.class,
-                "production").allowMainThreadQueries().build();
-
-        results = db.StudentExamDao().getResults(exams.get(position).getExam_ID());
-        StudentResultAdapter adapter = new StudentResultAdapter(results);
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(holder.examName.getContext()));
-        holder.recyclerView.setAdapter(adapter);
-
-        final boolean isExpanded = position == mExpandedPosition;
-        holder.optionsContainer.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-//        holder.examContainer.setBackgroundResource(isExpanded ? R.color.taskExpanded : R.color.taskSmall);
-        holder.itemView.setActivated(isExpanded);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        eh = (ExamViewHolder) holder;
+        eh.setItem(items.get(position));
+        final boolean isExpanded = position==mExpandedPosition;
+        eh.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        eh.toggleTaskInfo.setChecked(isExpanded?true:false);
 
         if (isExpanded)
             previousExpandPosition = position;
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        eh.toggleTaskInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1 : position;
+                mExpandedPosition = isExpanded ? -1:position;
                 notifyItemChanged(previousExpandPosition);
                 notifyItemChanged(position);
             }
         });
 
+        db = Room.databaseBuilder(eh.examName.getContext(), AppDatabase.class,
+                "production").allowMainThreadQueries().build();
+        results = db.StudentExamDao().getResults(eh.item.getExam_ID());
+        StudentResultAdapter adapter = new StudentResultAdapter(results);
+        eh.recyclerView.setLayoutManager(new LinearLayoutManager(eh.examName.getContext()));
+        eh.recyclerView.setAdapter(adapter);
+
+
+        if (!examList.is_in_action_mode) {
+            eh.multiSelectBox.setVisibility(View.GONE);
+            eh.toggleTaskInfo.setVisibility(View.VISIBLE);
+        } else {
+            eh.multiSelectBox.setVisibility(View.VISIBLE);
+            eh.toggleTaskInfo.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return exams.size();
+        return items.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView examName;
-        public TextView examID;
-        public TextView examDateTime;
-        public TextView examLocation;
-        public ConstraintLayout examContainer, optionsContainer;
-        public Button deleteExamBtn;
-        RecyclerView recyclerView;
-        RecyclerView.Adapter adapter;
-
-        AppDatabase db = Room.databaseBuilder(itemView.getContext(), AppDatabase.class,
-                "production").allowMainThreadQueries().build();
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            examID = itemView.findViewById(R.id.examID);
-            examName = itemView.findViewById(R.id.examName);
-            examDateTime = itemView.findViewById(R.id.dateTime);
-            examLocation = itemView.findViewById(R.id.examLocation);
-            examContainer = itemView.findViewById(R.id.examContainer);
-            optionsContainer = itemView.findViewById(R.id.optionsContainer);
-            deleteExamBtn = itemView.findViewById(R.id.deleteExamBtn);
-            recyclerView = itemView.findViewById(R.id.resultsList);
-
-            deleteExamBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    delete(getLayoutPosition());
-                }
-            });
-        }
-
-        public void delete(final int position) {
-            final int ID = Integer.parseInt(examID.getText().toString());
-            AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
-            builder.setMessage("Delete Exam?")
-                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            exams.remove(position);
-                            db.StudentExamDao().deleteExam(ID);
-                            db.ExamDao().deleteExam(ID);
-                            notifyItemRemoved(position);
-                        }
-                    }).setNegativeButton("CANCEL", null);
-
-            AlertDialog alert = builder.create();
-            alert.show();
-
-        }
-    }
 }

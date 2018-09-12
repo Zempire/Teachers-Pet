@@ -1,9 +1,7 @@
 package com.example.android.tabsetup;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,8 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -36,7 +32,7 @@ public class ExamList extends Fragment implements ExamViewHolder.ExamListener, V
     boolean is_in_action_mode = false;
     FloatingActionButton examFab;
     RecyclerView recyclerView;
-    NewExamAdapter adapter;
+    ExamAdapter adapter;
     AppDatabase db;
     List<Exam> exams;
     List<Exam> selectedExams = new ArrayList<>();
@@ -58,7 +54,7 @@ public class ExamList extends Fragment implements ExamViewHolder.ExamListener, V
                 "production").allowMainThreadQueries().build();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new NewExamAdapter(getLayoutInflater(), this, this);
+        adapter = new ExamAdapter(getLayoutInflater(), this, this);
         recyclerView.setAdapter(adapter);
         exams = db.ExamDao().getAllExams();
         adapter.updateItems(exams);
