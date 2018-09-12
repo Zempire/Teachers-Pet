@@ -56,8 +56,6 @@ public class TabActivity extends AppCompatActivity {
                             getWindow().setStatusBarColor(ContextCompat.getColor(TabActivity.this,
                                     R.color.taskPrimary));
                         }
-                        drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.task_icon);
-                        toolbar.setOverflowIcon(drawable);
                         break;
                     case 2:
                         toolbar.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
@@ -68,8 +66,6 @@ public class TabActivity extends AppCompatActivity {
                             getWindow().setStatusBarColor(ContextCompat.getColor(TabActivity.this,
                                     R.color.examPrimary));
                         }
-                        drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.exam_icon);
-                        toolbar.setOverflowIcon(drawable);
                         break;
                     default:
                         toolbar.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
@@ -80,8 +76,6 @@ public class TabActivity extends AppCompatActivity {
                             getWindow().setStatusBarColor(ContextCompat.getColor(TabActivity.this,
                                     R.color.colorAccent));
                         }
-                        drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.student_icon);
-                        toolbar.setOverflowIcon(drawable);
                         break;
                 }
             }

@@ -1,43 +1,42 @@
 package com.example.android.tabsetup;
 
-        import android.app.Activity;
-        import android.app.AlertDialog;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.graphics.drawable.Drawable;
-        import android.net.Uri;
-        import android.os.Bundle;
-        import android.view.LayoutInflater;
-        import android.view.Menu;
-        import android.view.MenuInflater;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.LinearLayout;
-        import android.widget.Toast;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.util.ArrayList;
+import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
-        import com.google.android.material.floatingactionbutton.FloatingActionButton;
+public class  StudentList extends Fragment implements StudentViewHolder.StudentListener, View.OnLongClickListener {
 
-        import java.util.ArrayList;
-        import java.util.List;
-
-        import androidx.annotation.NonNull;
-        import androidx.annotation.Nullable;
-        import androidx.constraintlayout.widget.ConstraintLayout;
-        import androidx.core.content.ContextCompat;
-        import androidx.fragment.app.Fragment;
-        import androidx.recyclerview.widget.LinearLayoutManager;
-        import androidx.recyclerview.widget.RecyclerView;
-        import androidx.room.Room;
-
-public class StudentList extends Fragment implements SmartViewHolder.StudentListener {
-
+    boolean is_in_action_mode = false;  //Flag for mass delete mode.
+    int deleteCount = 0;                //For use in displaying selected count.
     FloatingActionButton studentFab;
+    TextView toolbarText;
     RecyclerView recyclerView;
-    SuperChillAdapter adapter;
+    StudentAdapter adapter;
     AppDatabase db;
     List<Student> students;
+    List<Student> selectedStudents = new ArrayList<>();
+    androidx.appcompat.widget.Toolbar toolbar;
+    AppCompatActivity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,21 +44,31 @@ public class StudentList extends Fragment implements SmartViewHolder.StudentList
         recyclerView = rootView.findViewById(R.id.studentRecycler);
         studentFab = rootView.findViewById(R.id.studentFab);
 
+        // Setting up Fragment access to the toolbar and menu.
+        toolbar = getActivity().findViewById(R.id.mainToolbar);
+        activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        toolbarText = toolbar.findViewById(R.id.toolbar_text);
+        toolbarText.setText("0 SELECTED");
+        toolbarText.setVisibility(View.GONE);
+
+
         db = Room.databaseBuilder(getActivity().getApplicationContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new SuperChillAdapter(getLayoutInflater(), this);
+        adapter = new StudentAdapter(getLayoutInflater(), this, this);
         recyclerView.setAdapter(adapter);
         students = db.StudentDao().getAllStudents();
         adapter.updateItems(students);
-
 
         studentFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), StudentCreator.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+
             }
         });
 
@@ -68,7 +77,7 @@ public class StudentList extends Fragment implements SmartViewHolder.StudentList
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
     }
@@ -82,21 +91,36 @@ public class StudentList extends Fragment implements SmartViewHolder.StudentList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.action_order_name:
+            case R.id.massDelete:                  // Deletes all chosen students.
+                deleteAllSelected(selectedStudents);
+                students = db.StudentDao().getAllStudents();
+                finishActionMode();
+                break;
+            case R.id.action_delete_student:     // Starts mode for deleting multiple students.
+                startActionMode();
+                break;
+            case android.R.id.home:              // Closes mode for deleting multiple students.
+                students = db.StudentDao().getAllStudents();
+                finishActionMode();
+                break;
+            case R.id.action_order_name:        // Reorders the students by name.
                 students = db.StudentDao().getByName();
                 adapter.updateItems(students);
                 break;
-            case R.id.action_order_id:
+            case R.id.action_order_id:          // Orders the students by ID.
                 students = db.StudentDao().getAllStudents();
                 adapter.updateItems(students);
                 break;
+            case R.id.action_open_gallery:
+                Intent gallery = new Intent(getContext(), GalleryActivity.class);
+                startActivity(gallery);
             default:
                 break;
         }
         return true;
     }
 
-    //Implemented Methods to be passed to the ViewHolder
+    //Implemented Methods to be passed to the ViewHolder Interface.
     @Override
     public void deleteStudent(final Student item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -122,19 +146,75 @@ public class StudentList extends Fragment implements SmartViewHolder.StudentList
         Intent intent = new Intent(context, StudentUpdater.class);
         intent.putExtra("STUDENT_ID", Integer.toString(item.getStudent_ID()));
         context.startActivity(intent);
-        ((Activity)context).finish();
+//        ((Activity)context).finish();
     }
 
     @Override
     public void openMaps(Student item) {
-        Uri gmmIntentUri = Uri.parse("geo:33.8708,151.2073?q=" + item.getAddress());
+        Uri gmmIntentUri = Uri.parse("geo:0,0,?q=" + item.getAddress());
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
     }
 
     @Override
-    public void deleteMultiple(List<Student> students) {
+    public void prepareSelection(View view, int position) {
+        if(((CheckBox)view).isChecked()) {
+            selectedStudents.add(students.get(position));
+            deleteCount +=1;
+        } else {
+            selectedStudents.remove(students.get(position));
+            deleteCount -= 1;
+        }
+        updateCounter(deleteCount);
+    }
+    // End of Interface methods.
 
+    // Longclick to be used by the ViewHolder.
+    @Override
+    public boolean onLongClick(View view) {
+        startActionMode();
+        return true;
+    }
+
+    // Changes menu and starts multi delete students mode.
+    public void startActionMode() {
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.menu_action_mode);
+        is_in_action_mode = true;
+        toolbarText.setVisibility(View.VISIBLE);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    // Ends the multi delete students mode.
+    public void finishActionMode() {
+        is_in_action_mode = false;
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.menu_student);
+        toolbarText.setVisibility(View.GONE);
+        deleteCount = 0;
+        toolbarText.setText("0 SELECTED");
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
+        selectedStudents = new ArrayList<>();
+        adapter.updateItems(students);
+
+    }
+
+    // Deletes all selected students from the database.
+    public void deleteAllSelected(List<Student> selectedStudents){
+        for (int i = 0; i < selectedStudents.size();i++) {
+            db.StudentExamDao().deleteStudent(selectedStudents.get(i).getStudent_ID());
+            db.StudentDao().deleteStudent(selectedStudents.get(i).getStudent_ID());
+        }
+    }
+
+    public void updateCounter(int counter) {
+        if (counter == 0) {
+            toolbarText.setText("0 SELECTED");
+        } else {
+            toolbarText.setText(counter + " SELECTED");
+        }
     }
 }

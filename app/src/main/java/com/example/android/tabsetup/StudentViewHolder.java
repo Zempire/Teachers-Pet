@@ -1,25 +1,18 @@
 package com.example.android.tabsetup;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
 import java.io.File;
-import java.util.List;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SmartViewHolder extends RecyclerView.ViewHolder {
+public class StudentViewHolder extends RecyclerView.ViewHolder {
     TextView studentName;
     TextView student_ID;
     TextView student_address;
@@ -29,20 +22,25 @@ public class SmartViewHolder extends RecyclerView.ViewHolder {
     Button deleteStudentBtn, viewStudentBtn;
     ToggleButton toggleStudentInfo;
     ImageView profilePic;
-
+    CheckBox multiSelectBox;
+    File image = null;
+    StudentList studentList; //Allows use of StudentList's onLongClickListener
     Student item;
     StudentListener listener;
 
+    // Allows the passing of methods from the base activity for better communication between
+    // the classes and also lightens the load on the ViewHolder too.
     public interface StudentListener{
         void deleteStudent(Student item);
         void updateStudent(Student item);
         void openMaps(Student item);
-        void deleteMultiple(List<Student> students);
+        void prepareSelection(View view, int position);
     }
 
-    public SmartViewHolder(View itemView, final StudentListener listener) {
+    public StudentViewHolder(View itemView, final StudentListener listener, final StudentList studentList) {
         super(itemView);
         this.listener = listener;
+        this.studentList = studentList;
         studentName = itemView.findViewById(R.id.studentName);
         student_ID = itemView.findViewById(R.id.student_id);
         student_address = itemView.findViewById(R.id.student_address);
@@ -54,7 +52,24 @@ public class SmartViewHolder extends RecyclerView.ViewHolder {
         viewStudentBtn = itemView.findViewById(R.id.viewStudentBtn);
         profilePic = itemView.findViewById(R.id.profilePic);
         toggleStudentInfo = itemView.findViewById(R.id.toggleStudentInfo);
+        multiSelectBox = itemView.findViewById(R.id.multiSelectBox);
 
+        studentContainer.setOnLongClickListener(studentList);
+        studentContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (studentList.is_in_action_mode) {
+                    if (multiSelectBox.isChecked()) {
+                        multiSelectBox.setChecked(false);
+                    } else {
+                        multiSelectBox.setChecked(true);
+                    }
+                    studentContainer.setBackgroundResource(multiSelectBox.isChecked() ?
+                            R.color.deleteObject : R.color.taskSmall);
+                    listener.prepareSelection(multiSelectBox, getAdapterPosition());
+                }
+            }
+        });
 
         deleteStudentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,8 +91,8 @@ public class SmartViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setItem(Student item) {
-        String name = item.getFirstName() + " " + item.getLastName();
         this.item = item;
+        String name = item.getFirstName() + " " + item.getLastName();
         studentName.setText(name);
         student_ID.setText(Integer.toString(item.getStudent_ID()));
         student_address.setText(item.getAddress());
@@ -87,15 +102,10 @@ public class SmartViewHolder extends RecyclerView.ViewHolder {
         // Add a profile image to the student's view.
         String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup" +
                 "/files/" + "Pictures/" + "PROFILE_" + item.getStudent_ID() +".jpg";
-        File image = new File(imageFileName);
+        image = new File(imageFileName);
         if (image.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
             profilePic.setImageBitmap(myBitmap);
         }
     }
-//    private String getFormattedDate(Student item) {
-//        String date = item.getYear() + " " + item.getEra();
-//        return date;
-//    }
-
 }

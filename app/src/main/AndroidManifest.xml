@@ -22,19 +22,18 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
-        <activity android:name=".TabActivity">
+        <activity android:name=".TabActivity"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StudentCreator">
+        <activity android:name=".StudentCreator"/>
+        <activity android:name=".StudentUpdater"/>
+        <activity android:name=".GalleryActivity"/>
 
-        </activity>
-        <activity android:name=".StudentUpdater">
-
-        </activity>
     </application>
 
 </manifest>

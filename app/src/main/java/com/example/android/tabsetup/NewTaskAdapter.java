@@ -9,27 +9,27 @@ import java.util.List;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class StudentAdapter extends RecyclerView.Adapter {
-    private List<Student> items;
+public class NewTaskAdapter extends RecyclerView.Adapter {
+    private List<Task> items;
     private LayoutInflater inflater;
-    private StudentViewHolder.StudentListener studentListener;
-    StudentList studentList;
-    StudentViewHolder vh;
+    private TaskViewHolder.TaskListener taskListener;
+    TaskList taskList;
+    TaskViewHolder th;
 
     //For controlling expansion of just 1 ViewHolder.
     private int mExpandedPosition = -1;
     private int previousExpandPosition = -1;
 
 
-    public StudentAdapter(LayoutInflater inflater, StudentViewHolder.StudentListener studentListener, StudentList studentList) {
+    public NewTaskAdapter(LayoutInflater inflater, TaskViewHolder.TaskListener taskListener, TaskList taskList) {
         this.inflater = inflater;
-        this.studentListener = studentListener;
-        this.studentList = studentList;
+        this.taskListener = taskListener;
+        this.taskList = taskList;
         items = new ArrayList<>();
     }
 
-    public void updateItems(final List<Student> newItems) {
-        final List<Student> oldItems = new ArrayList<>(this.items);
+    public void updateItems(final List<Task> newItems) {
+        final List<Task> oldItems = new ArrayList<>(this.items);
         this.items.clear();
         if (newItems != null) {
             this.items.addAll(newItems);
@@ -60,21 +60,21 @@ public class StudentAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.student_row, parent, false);
-        return new StudentViewHolder(v, studentListener, studentList);
+        View v = inflater.inflate(R.layout.task_row, parent, false);
+        return new TaskViewHolder(v, taskListener, taskList);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        vh = (StudentViewHolder) holder;
-        vh.setItem(items.get(position));
+        th = (TaskViewHolder) holder;
+        th.setItem(items.get(position));
         final boolean isExpanded = position==mExpandedPosition;
-        vh.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        vh.toggleStudentInfo.setChecked(isExpanded?true:false);
+        th.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        th.toggleTaskInfo.setChecked(isExpanded?true:false);
 
         if (isExpanded)
             previousExpandPosition = position;
-        vh.toggleStudentInfo.setOnClickListener(new View.OnClickListener() {
+        th.toggleTaskInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mExpandedPosition = isExpanded ? -1:position;
@@ -83,13 +83,17 @@ public class StudentAdapter extends RecyclerView.Adapter {
             }
         });
 
-        vh.multiSelectBox.setChecked(false);
-        vh.studentContainer.setBackgroundResource(R.color.taskSmall);
-        if (!studentList.is_in_action_mode) {
-           vh.toggleStudentInfo.setVisibility(View.VISIBLE);
+        th.multiSelectBox.setChecked(false);
+        th.taskContainer.setBackgroundResource(R.color.taskSmall);
+        if (!taskList.is_in_action_mode) {
+            th.toggleTaskInfo.setVisibility(View.VISIBLE);
         } else {
-            vh.toggleStudentInfo.setVisibility(View.GONE);
+            th.toggleTaskInfo.setVisibility(View.GONE);
         }
+
+        // Changes the look of Task depending on it's complete Status.
+        th.taskContainer.setBackgroundResource(items.get(position).getTaskStatus() == 1?
+                R.color.completedTask:R.color.taskSmall);
     }
 
     @Override

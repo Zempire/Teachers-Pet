@@ -14,7 +14,15 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorAccent"
         android:theme="?actionBarTheme"
+        app:theme="@style/ToolbarColoredBackArrow"
         app:popupTheme="@style/CustomPopupTheme">
+
+        <TextView
+            android:id="@+id/toolbar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
     </androidx.appcompat.widget.Toolbar>
 

@@ -280,8 +280,9 @@ public class StudentCreator extends AppCompatActivity {
                             studentDOB.getText().toString(), genderChoice,
                             stud_course.getText().toString());
                     db.StudentDao().insertAllStudent(newStudent);
-                    startActivity(new Intent(StudentCreator.this, TabActivity.class));
-                    finish();
+                    Intent intent = new Intent(StudentCreator.this, TabActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
             }
         });

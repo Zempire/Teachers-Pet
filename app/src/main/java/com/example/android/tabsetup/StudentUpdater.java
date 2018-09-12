@@ -234,7 +234,14 @@ public class StudentUpdater extends AppCompatActivity {
             stud_city.setText(addressArray.get(3));
             stud_state.setText(addressArray.get(4));
             stud_post.setText(addressArray.get(5));
+        } else {
+            String address = "";
+            for (String data: addressArray) {
+                address += data + " ";
+            }
+            stud_street.setText(address);
         }
+
         studentDOB.setText(currentStudent.getDob());
         stud_course.setText(currentStudent.getCourse());
 

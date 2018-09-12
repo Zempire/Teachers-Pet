@@ -7,29 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
-public class StudentAdapter extends RecyclerView.Adapter {
-    private List<Student> items;
+public class NewExamAdapter extends RecyclerView.Adapter {
+    private List<Exam> items;
     private LayoutInflater inflater;
-    private StudentViewHolder.StudentListener studentListener;
-    StudentList studentList;
-    StudentViewHolder vh;
+    private ExamViewHolder.ExamListener examListener;
+    ExamList examList;
+    ExamViewHolder eh;
+
+    AppDatabase db;
+    List<StudentResult> results;
 
     //For controlling expansion of just 1 ViewHolder.
     private int mExpandedPosition = -1;
     private int previousExpandPosition = -1;
 
 
-    public StudentAdapter(LayoutInflater inflater, StudentViewHolder.StudentListener studentListener, StudentList studentList) {
+    public NewExamAdapter(LayoutInflater inflater, ExamViewHolder.ExamListener examListener, ExamList examList) {
         this.inflater = inflater;
-        this.studentListener = studentListener;
-        this.studentList = studentList;
+        this.examListener = examListener;
+        this.examList = examList;
         items = new ArrayList<>();
     }
 
-    public void updateItems(final List<Student> newItems) {
-        final List<Student> oldItems = new ArrayList<>(this.items);
+    public void updateItems(final List<Exam> newItems) {
+        final List<Exam> oldItems = new ArrayList<>(this.items);
         this.items.clear();
         if (newItems != null) {
             this.items.addAll(newItems);
@@ -60,21 +65,21 @@ public class StudentAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.student_row, parent, false);
-        return new StudentViewHolder(v, studentListener, studentList);
+        View v = inflater.inflate(R.layout.exam_row, parent, false);
+        return new ExamViewHolder(v, examListener, examList);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        vh = (StudentViewHolder) holder;
-        vh.setItem(items.get(position));
+        eh = (ExamViewHolder) holder;
+        eh.setItem(items.get(position));
         final boolean isExpanded = position==mExpandedPosition;
-        vh.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        vh.toggleStudentInfo.setChecked(isExpanded?true:false);
+        eh.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        eh.toggleTaskInfo.setChecked(isExpanded?true:false);
 
         if (isExpanded)
             previousExpandPosition = position;
-        vh.toggleStudentInfo.setOnClickListener(new View.OnClickListener() {
+        eh.toggleTaskInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mExpandedPosition = isExpanded ? -1:position;
@@ -83,12 +88,20 @@ public class StudentAdapter extends RecyclerView.Adapter {
             }
         });
 
-        vh.multiSelectBox.setChecked(false);
-        vh.studentContainer.setBackgroundResource(R.color.taskSmall);
-        if (!studentList.is_in_action_mode) {
-           vh.toggleStudentInfo.setVisibility(View.VISIBLE);
+        db = Room.databaseBuilder(eh.examName.getContext(), AppDatabase.class,
+                "production").allowMainThreadQueries().build();
+        results = db.StudentExamDao().getResults(eh.item.getExam_ID());
+        StudentResultAdapter adapter = new StudentResultAdapter(results);
+        eh.recyclerView.setLayoutManager(new LinearLayoutManager(eh.examName.getContext()));
+        eh.recyclerView.setAdapter(adapter);
+
+
+        if (!examList.is_in_action_mode) {
+            eh.multiSelectBox.setVisibility(View.GONE);
+            eh.toggleTaskInfo.setVisibility(View.VISIBLE);
         } else {
-            vh.toggleStudentInfo.setVisibility(View.GONE);
+            eh.multiSelectBox.setVisibility(View.VISIBLE);
+            eh.toggleTaskInfo.setVisibility(View.GONE);
         }
     }
 

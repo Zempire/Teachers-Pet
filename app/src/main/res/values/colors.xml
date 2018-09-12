@@ -3,6 +3,7 @@
     <color name="colorPrimary">#830b1f</color>
     <color name="colorPrimaryDark">#510d18</color>
     <color name="colorAccent">#da0e30</color>
+    <color name="deleteObject">#1bff0000</color>
 
     <color name="unselectedTab">#aaaaaa</color>
     <color name="taskExpanded">#efefef</color>
@@ -11,7 +12,7 @@
     <color name="taskPrimary">#2493d2</color>
     <color name="taskPrimaryDark">#124e70</color>
     <color name="taskAccent">#88d4ff</color>
-    <color name="completedTask">#9c599664</color>
+    <color name="completedTask">#702493d2</color>
 
     <color name="examPrimary">#52a66b</color>
     <color name="examPrimaryDark">#215932</color>
