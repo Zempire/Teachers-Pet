@@ -26,7 +26,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -171,7 +173,7 @@ public class StudentCreator extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     RadioGroup gender;
 
-    String mCurrentPhotoPath;
+    String mCurrentPhotoPath = "";
 
     static final int REQUEST_TAKE_PHOTO = 1;
 
@@ -277,7 +279,7 @@ public class StudentCreator extends AppCompatActivity {
                             lastName.getText().toString(),
                             wholeAddress,
                             studentDOB.getText().toString(), genderChoice,
-                            stud_course.getText().toString());
+                            stud_course.getText().toString(), mCurrentPhotoPath);
                     db.StudentDao().insertAllStudent(newStudent);
                     Intent intent = new Intent(StudentCreator.this, TabActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -323,9 +325,16 @@ public class StudentCreator extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String imageFileName = "PROFILE_" + studentID.getText().toString();
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = new File(storageDir + "/" + imageFileName + ".jpg");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
@@ -355,9 +364,7 @@ public class StudentCreator extends AppCompatActivity {
     }
 
     Bitmap createProfilePic() {
-        String imageFileName = "PROFILE_" + studentID.getText().toString();
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = new File(storageDir + "/" + imageFileName + ".jpg");
+        File image = new File(mCurrentPhotoPath);
         Bitmap finalOut = null;
         if (image.exists()) {
             //Open output stream.

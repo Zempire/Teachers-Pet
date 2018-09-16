@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
+
 import java.io.File;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,8 +51,8 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         dateOfBirth = itemView.findViewById(R.id.student_dob);
         studentContainer = itemView.findViewById(R.id.studentContainer);
         optionsContainer = itemView.findViewById(R.id.optionsContainer);
-        deleteStudentBtn = itemView.findViewById(R.id.deleteStudentBtn);
-        viewStudentBtn = itemView.findViewById(R.id.viewStudentBtn);
+        deleteStudentBtn = itemView.findViewById(R.id.deleteImgBtn);
+        viewStudentBtn = itemView.findViewById(R.id.updateImgBtn);
         profilePicStudent = itemView.findViewById(R.id.profilePicList);
         toggleStudentInfo = itemView.findViewById(R.id.toggleStudentInfo);
         multiSelectBox = itemView.findViewById(R.id.multiSelectBox);
@@ -106,5 +106,14 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         gender.setText(item.getGender());
         dateOfBirth.setText(item.getDob());
 
+        // Add a profile image to the student's view.
+        File image = new File(item.getProfilePicture());
+        if (image.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
+            Bitmap resized = Bitmap.createScaledBitmap(myBitmap, 50, 50, true);
+            profilePicStudent.setImageBitmap(resized);
+        } else {
+            profilePicStudent.setImageResource(R.drawable.newimage);
+        }
     }
 }

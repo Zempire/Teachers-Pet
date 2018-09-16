@@ -218,13 +218,20 @@ public class StudentUpdater extends AppCompatActivity {
         lastName.setText(currentStudent.getLastName());
 
         // Add the profile image to the view.
-        String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup" +
-                "/files/" + "Pictures/" + "PROFILE_" + currentStudent.getStudent_ID() +".jpg";
-        File image = new File(imageFileName);
+        File image = new File(currentStudent.getProfilePicture());
         if (image.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
             addImage.setImageBitmap(myBitmap);
         }
+
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(StudentUpdater.this, GalleryActivity.class);
+                intent.putExtra("STUDENT_ID", Integer.toString(currentStudent.getStudent_ID()));
+                startActivity(intent);
+            }
+        });
 
         if (addressArray.size() > 5) {
             stud_street.setText(addressArray.get(0) + " " + addressArray.get(1) + " " + addressArray.get(2));
@@ -275,7 +282,7 @@ public class StudentUpdater extends AppCompatActivity {
                         lastName.getText().toString(),
                         wholeAddress,
                         studentDOB.getText().toString(), genderChoice,
-                        stud_course.getText().toString());
+                        stud_course.getText().toString(), currentStudent.getProfilePicture());
                 db.StudentDao().updateStudent(currentStudent);
                 Intent intent = new Intent(StudentUpdater.this, TabActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

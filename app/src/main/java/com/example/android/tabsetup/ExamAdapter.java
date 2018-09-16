@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 public class ExamAdapter extends RecyclerView.Adapter {
+
+    public int mExpandedPosition = -1;
+    public int previousExpandPosition = -1;
     private List<Exam> items;
     private LayoutInflater inflater;
     private ExamViewHolder.ExamListener examListener;
@@ -69,12 +72,12 @@ public class ExamAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         eh = (ExamViewHolder) holder;
         eh.setItem(items.get(position));
-        eh.isExpanded = position==examList.mExpandedPosition;
+        eh.isExpanded = position==mExpandedPosition;
         eh.optionsContainer.setVisibility(eh.isExpanded?View.VISIBLE:View.GONE);
         eh.toggleExamInfo.setRotation(eh.isExpanded?180:0);
 
         if (eh.isExpanded)
-            examList.previousExpandPosition = position;
+            previousExpandPosition = position;
 
         eh.multiSelectBox.setChecked(false);
         eh.examContainer.setBackgroundResource(R.color.taskSmall);

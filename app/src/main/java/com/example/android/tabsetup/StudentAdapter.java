@@ -76,17 +76,7 @@ public class StudentAdapter extends RecyclerView.Adapter {
         vh.optionsContainer.setVisibility(vh.isExpanded?View.VISIBLE:View.GONE);
         vh.toggleStudentInfo.setRotation(vh.isExpanded?180:0);
 
-        // Add a profile image to the student's view.
-        String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup" +
-                "/files/" + "Pictures/" + "PROFILE_" + items.get(position).getStudent_ID() +".jpg";
-        File image = new File(imageFileName);
-        if (image.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
-            Bitmap resized = Bitmap.createScaledBitmap(myBitmap, 50, 50, true);
-            vh.profilePicStudent.setImageBitmap(resized);
-        } else {
-            vh.profilePicStudent.setImageResource(R.drawable.newimage);
-        }
+
 
         if (vh.isExpanded)
             studentList.previousExpandPosition = position;

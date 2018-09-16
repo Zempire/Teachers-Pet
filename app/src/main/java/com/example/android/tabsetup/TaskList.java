@@ -99,7 +99,7 @@ public class TaskList extends Fragment implements TaskViewHolder.TaskListener, V
             switch(item.getItemId()) {
                 case R.id.massDelete:                   // Deletes all chosen tasks.
                     deleteAllSelected(selectedTasks);
-                    tasks = db.TaskDao().getAllTasks();
+                    tasks = db.TaskDao().getUncompletedTasks();
                     finishActionMode();
                     break;
                 case R.id.action_delete_task:           // Starts mode for deleting multiple tasks.

@@ -39,7 +39,7 @@ public class ExamViewHolder extends RecyclerView.ViewHolder {
     public interface ExamListener{
         void deleteExam(final Exam item);
         void prepareSelection(View view, int position);
-        void expandView(boolean isExpanded, int position);
+        void expandView(boolean isExpanded, int position, Exam item);
 
     }
 
@@ -80,7 +80,7 @@ public class ExamViewHolder extends RecyclerView.ViewHolder {
                             R.color.deleteObject : R.color.taskSmall);
                     listener.prepareSelection(multiSelectBox, getAdapterPosition());
                 } else {
-                    listener.expandView(isExpanded, getAdapterPosition());
+                    listener.expandView(isExpanded, getAdapterPosition(), item);
                 }
             }
         });

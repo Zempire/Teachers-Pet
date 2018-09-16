@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "Student")
 public class Student {
     public Student(int student_ID, String firstName, String lastName, String address,
-                   String dob, String gender, String course) {
+                   String dob, String gender, String course, String profilePicture) {
         this.student_ID = student_ID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -15,6 +15,7 @@ public class Student {
         this.dob = dob;
         this.gender = gender;
         this.course = course;
+        this.profilePicture = profilePicture;
     }
 
     @PrimaryKey
@@ -37,6 +38,17 @@ public class Student {
 
     @ColumnInfo(name = "course")
     private String course;
+
+    @ColumnInfo(name = "profile_picture")
+    private String profilePicture;
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
 
     public int getStudent_ID() {
         return student_ID;

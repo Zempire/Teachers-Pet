@@ -28,7 +28,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
     // Allows the passing of methods from the base activity for better communication between
     // the classes and also lightens the load on the ViewHolder too.
     public interface GalleryListener{
-        public void expandImage(Bitmap myBitmap);
+        public void expandImage(File file, Bitmap myBitmap);
     }
 
     public GalleryViewHolder(View itemView, final GalleryListener listener, final GalleryActivity galleryActivity) {
@@ -40,7 +40,7 @@ public class GalleryViewHolder extends RecyclerView.ViewHolder {
         galleryImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.expandImage(myBitmap);
+                listener.expandImage(item, myBitmap);
             }
         });
     }

@@ -122,7 +122,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/genderHeader" />
 
             <Button
-                android:id="@+id/viewStudentBtn"
+                android:id="@+id/updateImgBtn"
                 android:layout_width="0dp"
                 android:layout_height="25dp"
                 android:layout_marginTop="16dp"
@@ -133,7 +133,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/student_dob" />
 
             <Button
-                android:id="@+id/deleteStudentBtn"
+                android:id="@+id/deleteImgBtn"
                 android:layout_width="0dp"
                 android:layout_height="25dp"
                 android:layout_marginBottom="8dp"
@@ -142,7 +142,7 @@
                 android:textColor="@color/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/viewStudentBtn" />
+                app:layout_constraintTop_toTopOf="@+id/updateImgBtn" />
 
             <TextView
                 android:id="@+id/dobHeader"

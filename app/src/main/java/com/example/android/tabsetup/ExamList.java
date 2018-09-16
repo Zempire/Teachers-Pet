@@ -37,8 +37,6 @@ import androidx.room.Room;
 public class ExamList extends Fragment implements ExamViewHolder.ExamListener, View.OnLongClickListener {
 
     boolean is_in_action_mode = false;
-    int mExpandedPosition = -1;
-    int previousExpandPosition = -1;
     int deleteCount = 0;
     FloatingActionButton examFab;
     TextView toolbarText;
@@ -135,7 +133,7 @@ public class ExamList extends Fragment implements ExamViewHolder.ExamListener, V
                         db.StudentExamDao().deleteExam(item.getExam_ID());
                         db.ExamDao().deleteExam(item.getExam_ID());
                         exams = db.ExamDao().getAllExams();
-                        upcomingAdapter.updateItems(exams);
+                        updateAdapters();
                     }
                 }).setNegativeButton("CANCEL", null);
         AlertDialog alert = builder.create();
@@ -153,17 +151,32 @@ public class ExamList extends Fragment implements ExamViewHolder.ExamListener, V
         updateCounter(deleteCount);
     }
 
+
+    //Sorry this is messy but only way I could think of targeting the recyclerViews separately.
     @Override
-    public void expandView(boolean isExpanded, int position) {
-        mExpandedPosition = isExpanded ? -1:position;
-        upcomingAdapter.notifyItemChanged(previousExpandPosition);
-        upcomingAdapter.notifyItemChanged(position);
-        completedAdapter.notifyItemChanged(previousExpandPosition);
-        completedAdapter.notifyItemChanged(position);
-        updateAdapters();
+    public void expandView(boolean isExpanded, int position, Exam item) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        Date date = new Date();
+        try {
+            String dateTime = item.getDateTime();
+            date = format.parse(dateTime);
+            if (currentTime.after(date)) {
+                completedAdapter.mExpandedPosition = isExpanded ? -1:position;
+                completedAdapter.notifyItemChanged(completedAdapter.previousExpandPosition);
+                completedAdapter.notifyItemChanged(position);
+                completedAdapter.updateItems(completedExams);
+            } else {
+                upcomingAdapter.mExpandedPosition = isExpanded ? -1:position;
+                upcomingAdapter.notifyItemChanged(upcomingAdapter.previousExpandPosition);
+                upcomingAdapter.notifyItemChanged(position);
+                upcomingAdapter.updateItems(upcomingExams);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
-    // Changes menu and starts multi delete students mode.
+    // Changes menu and starts multi delete exam mode.
     public void startActionMode() {
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.menu_action_mode);
@@ -175,7 +188,7 @@ public class ExamList extends Fragment implements ExamViewHolder.ExamListener, V
 //        adapter.notifyDataSetChanged();
     }
 
-    // Ends the multi delete students mode.
+    // Ends the multi delete exam mode.
     public void finishActionMode() {
         is_in_action_mode = false;
         toolbar.getMenu().clear();

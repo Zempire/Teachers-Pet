@@ -18,7 +18,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,31 +36,40 @@ public class GalleryActivity extends AppCompatActivity implements GalleryViewHol
     private static final int REQUEST_TAKE_PHOTO = 1;
     String mCurrentPhotoPath;
     RecyclerView recyclerView;
-    GalleryAdapter adapter;
+    public GalleryAdapter adapter;
     androidx.appcompat.widget.Toolbar toolbar;
-    List<File> images = new ArrayList<>();
+    ImageView takePhotoBtn;
+    public List<File> images = new ArrayList<>();
+    String currentStudentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
+        takePhotoBtn = findViewById(R.id.takePhotoBtn);
+        takePhotoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
         toolbar = findViewById(R.id.mainToolbar);
         toolbar.setTitle("Image Gallery");
         toolbar.setTitleTextColor(Color.BLACK);
         setSupportActionBar(toolbar);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+            currentStudentID = extras.getString("STUDENT_ID");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(GalleryActivity.this,
                     R.color.altBackground));
         }
         recyclerView = findViewById(R.id.imageRecycler);
-        File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File[] files = path.listFiles();
-        for(File image : files) {
-            System.out.println(image.toString());
-            images.add(image);
-        }
+        refreshFiles();
         int numColumns = 4;
         recyclerView.setLayoutManager(new GridLayoutManager(this, numColumns));
         adapter = new GalleryAdapter(getLayoutInflater(), this, this);
@@ -67,11 +78,22 @@ public class GalleryActivity extends AppCompatActivity implements GalleryViewHol
     }
 
     @Override
-    public void expandImage(Bitmap myBitmap) {
-        GalleryViewer newImage = new GalleryViewer(this, myBitmap);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK){
+            createProfilePic();
+            refreshFiles();
+            adapter.updateItems(images);
+        }
+    }
+
+    @Override
+    public void expandImage(File file, Bitmap myBitmap) {
+        GalleryViewer newImage = new GalleryViewer(this, this, file, myBitmap);
         Window window = newImage.getWindow();
         newImage.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        newImage.setCancelable(false);
+        newImage.setCancelable(true);
         newImage.show();
         window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
     }
@@ -116,44 +138,52 @@ public class GalleryActivity extends AppCompatActivity implements GalleryViewHol
         }
     }
 
-//    Bitmap createProfilePic() {
-//        String imageFileName = "PROFILE_" +  .getText().toString();
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = new File(storageDir + "/" + imageFileName + ".jpg");
-//        Bitmap finalOut = null;
-//        if (image.exists()) {
-//            //Open output stream.
-//            OutputStream outStream = null;
-//
-//            //Create Bitmap from file.
-//            Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
-//            image.delete();
-//
-//            //Rotate the Bitmap and set its dimensions to whichever dimension is smallest.
-//            Matrix matrix = new Matrix();
-//            matrix.postRotate(90);
-//
-//            //https://stackoverflow.com/questions/6908604/android-crop-center-of-bitmap
-//            // Crops image depending on height vs width.
-//            if (myBitmap.getWidth() >= myBitmap.getHeight()){
-//                finalOut = Bitmap.createBitmap(myBitmap,
-//                        myBitmap.getWidth()/2 - myBitmap.getHeight()/2, 0,
-//                        myBitmap.getHeight(), myBitmap.getHeight(), matrix, true);
-//
-//            } else {
-//                finalOut = Bitmap.createBitmap(myBitmap,
-//                        0, myBitmap.getHeight()/2 - myBitmap.getWidth()/2,
-//                        myBitmap.getWidth(), myBitmap.getWidth(), matrix, true);
-//            }
-//            try {
-//                outStream = new FileOutputStream(image);
-//                finalOut.compress(Bitmap.CompressFormat.JPEG, 60, outStream);
-//                outStream.flush();
-//                outStream.close();
-//            } catch(Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return finalOut;
-//    }
+    Bitmap createProfilePic() {
+
+        File image = new File(mCurrentPhotoPath);
+        Bitmap finalOut = null;
+        if (image.exists()) {
+            //Open output stream.
+            OutputStream outStream = null;
+
+            //Create Bitmap from file.
+            Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
+            image.delete();
+
+            //Rotate the Bitmap and set its dimensions to whichever dimension is smallest.
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+
+            //https://stackoverflow.com/questions/6908604/android-crop-center-of-bitmap
+            // Crops image depending on height vs width.
+            if (myBitmap.getWidth() >= myBitmap.getHeight()){
+                finalOut = Bitmap.createBitmap(myBitmap,
+                        myBitmap.getWidth()/2 - myBitmap.getHeight()/2, 0,
+                        myBitmap.getHeight(), myBitmap.getHeight(), matrix, true);
+
+            } else {
+                finalOut = Bitmap.createBitmap(myBitmap,
+                        0, myBitmap.getHeight()/2 - myBitmap.getWidth()/2,
+                        myBitmap.getWidth(), myBitmap.getWidth(), matrix, true);
+            }
+            try {
+                outStream = new FileOutputStream(image);
+                finalOut.compress(Bitmap.CompressFormat.JPEG, 60, outStream);
+                outStream.flush();
+                outStream.close();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return finalOut;
+    }
+
+    public void refreshFiles() {
+        images = new ArrayList<>();
+        File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File[] files = path.listFiles();
+        for(File image : files) {
+            images.add(image);
+        }
+    }
 }
