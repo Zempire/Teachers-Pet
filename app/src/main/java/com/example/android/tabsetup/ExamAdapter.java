@@ -21,10 +21,6 @@ public class ExamAdapter extends RecyclerView.Adapter {
     AppDatabase db;
     List<StudentResult> results;
 
-    //For controlling expansion of just 1 ViewHolder.
-    private int mExpandedPosition = -1;
-    private int previousExpandPosition = -1;
-
 
     public ExamAdapter(LayoutInflater inflater, ExamViewHolder.ExamListener examListener, ExamList examList) {
         this.inflater = inflater;
@@ -73,21 +69,15 @@ public class ExamAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         eh = (ExamViewHolder) holder;
         eh.setItem(items.get(position));
-        final boolean isExpanded = position==mExpandedPosition;
-        eh.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        eh.toggleTaskInfo.setChecked(isExpanded?true:false);
+        eh.isExpanded = position==examList.mExpandedPosition;
+        eh.optionsContainer.setVisibility(eh.isExpanded?View.VISIBLE:View.GONE);
+        eh.toggleExamInfo.setRotation(eh.isExpanded?180:0);
 
-        if (isExpanded)
-            previousExpandPosition = position;
-        eh.toggleTaskInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1:position;
-                notifyItemChanged(previousExpandPosition);
-                notifyItemChanged(position);
-            }
-        });
+        if (eh.isExpanded)
+            examList.previousExpandPosition = position;
 
+        eh.multiSelectBox.setChecked(false);
+        eh.examContainer.setBackgroundResource(R.color.taskSmall);
         db = Room.databaseBuilder(eh.examName.getContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
         results = db.StudentExamDao().getResults(eh.item.getExam_ID());
@@ -97,11 +87,9 @@ public class ExamAdapter extends RecyclerView.Adapter {
 
 
         if (!examList.is_in_action_mode) {
-            eh.multiSelectBox.setVisibility(View.GONE);
-            eh.toggleTaskInfo.setVisibility(View.VISIBLE);
+            eh.toggleExamInfo.setVisibility(View.VISIBLE);
         } else {
-            eh.multiSelectBox.setVisibility(View.VISIBLE);
-            eh.toggleTaskInfo.setVisibility(View.GONE);
+            eh.toggleExamInfo.setVisibility(View.GONE);
         }
     }
 

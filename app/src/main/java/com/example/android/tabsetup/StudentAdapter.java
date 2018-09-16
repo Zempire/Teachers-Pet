@@ -1,8 +1,12 @@
 package com.example.android.tabsetup;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +21,8 @@ public class StudentAdapter extends RecyclerView.Adapter {
     StudentViewHolder vh;
 
     //For controlling expansion of just 1 ViewHolder.
-    private int mExpandedPosition = -1;
-    private int previousExpandPosition = -1;
+//    private int mExpandedPosition = -1;
+//    private int previousExpandPosition = -1;
 
 
     public StudentAdapter(LayoutInflater inflater, StudentViewHolder.StudentListener studentListener, StudentList studentList) {
@@ -68,20 +72,24 @@ public class StudentAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         vh = (StudentViewHolder) holder;
         vh.setItem(items.get(position));
-        final boolean isExpanded = position==mExpandedPosition;
-        vh.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        vh.toggleStudentInfo.setChecked(isExpanded?true:false);
+        vh.isExpanded = position==studentList.mExpandedPosition;
+        vh.optionsContainer.setVisibility(vh.isExpanded?View.VISIBLE:View.GONE);
+        vh.toggleStudentInfo.setRotation(vh.isExpanded?180:0);
 
-        if (isExpanded)
-            previousExpandPosition = position;
-        vh.toggleStudentInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1:position;
-                notifyItemChanged(previousExpandPosition);
-                notifyItemChanged(position);
-            }
-        });
+        // Add a profile image to the student's view.
+        String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup" +
+                "/files/" + "Pictures/" + "PROFILE_" + items.get(position).getStudent_ID() +".jpg";
+        File image = new File(imageFileName);
+        if (image.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
+            Bitmap resized = Bitmap.createScaledBitmap(myBitmap, 50, 50, true);
+            vh.profilePicStudent.setImageBitmap(resized);
+        } else {
+            vh.profilePicStudent.setImageResource(R.drawable.newimage);
+        }
+
+        if (vh.isExpanded)
+            studentList.previousExpandPosition = position;
 
         vh.multiSelectBox.setChecked(false);
         vh.studentContainer.setBackgroundResource(R.color.taskSmall);

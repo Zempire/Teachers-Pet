@@ -13,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class StudentViewHolder extends RecyclerView.ViewHolder {
+
+    boolean isExpanded = false;
     TextView studentName;
     TextView student_ID;
     TextView student_address;
@@ -20,8 +22,8 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
     TextView dateOfBirth;
     ConstraintLayout studentContainer, optionsContainer;
     Button deleteStudentBtn, viewStudentBtn;
-    ToggleButton toggleStudentInfo;
-    ImageView profilePic;
+    ImageView toggleStudentInfo;
+    ImageView profilePicStudent;
     CheckBox multiSelectBox;
     File image = null;
     StudentList studentList; //Allows use of StudentList's onLongClickListener
@@ -35,6 +37,7 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         void updateStudent(Student item);
         void openMaps(Student item);
         void prepareSelection(View view, int position);
+        void expandView(boolean isExpanded, int position);
     }
 
     public StudentViewHolder(View itemView, final StudentListener listener, final StudentList studentList) {
@@ -50,10 +53,10 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         optionsContainer = itemView.findViewById(R.id.optionsContainer);
         deleteStudentBtn = itemView.findViewById(R.id.deleteStudentBtn);
         viewStudentBtn = itemView.findViewById(R.id.viewStudentBtn);
-        profilePic = itemView.findViewById(R.id.profilePic);
+        profilePicStudent = itemView.findViewById(R.id.profilePicList);
         toggleStudentInfo = itemView.findViewById(R.id.toggleStudentInfo);
         multiSelectBox = itemView.findViewById(R.id.multiSelectBox);
-
+        toggleStudentInfo.setEnabled(false);
         studentContainer.setOnLongClickListener(studentList);
         studentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +70,10 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
                     studentContainer.setBackgroundResource(multiSelectBox.isChecked() ?
                             R.color.deleteObject : R.color.taskSmall);
                     listener.prepareSelection(multiSelectBox, getAdapterPosition());
+                } else {
+                    System.out.println("MY ID IS: " + item.getStudent_ID());
+                    listener.expandView(isExpanded, getAdapterPosition());
+
                 }
             }
         });
@@ -99,13 +106,5 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         gender.setText(item.getGender());
         dateOfBirth.setText(item.getDob());
 
-        // Add a profile image to the student's view.
-        String imageFileName = "/storage/emulated/0/Android/data/com.example.android.tabsetup" +
-                "/files/" + "Pictures/" + "PROFILE_" + item.getStudent_ID() +".jpg";
-        image = new File(imageFileName);
-        if (image.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
-            profilePic.setImageBitmap(myBitmap);
-        }
     }
 }

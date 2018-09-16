@@ -32,6 +32,8 @@ import androidx.room.Room;
 public class TaskList extends Fragment implements TaskViewHolder.TaskListener, View.OnLongClickListener {
 
     boolean is_in_action_mode = false;
+    int mExpandedPosition = -1;
+    int previousExpandPosition = -1;
     int deleteCount = 0;
     FloatingActionButton taskFab;
     TextView toolbarText;
@@ -176,6 +178,15 @@ public class TaskList extends Fragment implements TaskViewHolder.TaskListener, V
             deleteCount -= 1;
         }
         updateCounter(deleteCount);
+    }
+
+
+    @Override
+    public void expandView(boolean isExpanded, int position) {
+        mExpandedPosition = isExpanded ? -1:position;
+        adapter.notifyItemChanged(previousExpandPosition);
+        adapter.notifyItemChanged(position);
+        adapter.updateItems(tasks);
     }
 
     // Changes menu and starts multi delete students mode.

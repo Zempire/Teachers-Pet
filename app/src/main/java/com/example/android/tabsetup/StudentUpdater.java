@@ -29,7 +29,7 @@ public class StudentUpdater extends AppCompatActivity {
     EditText firstName, lastName, studentID, studentDOB, stud_street, stud_city, stud_post;
     AutoCompleteTextView stud_state, stud_course;
     LinearLayout addressExpanded;
-    Button saveStudent, cancelStudent, selectDateBtn;
+    Button saveStudent, cancelStudent;
     DatePickerDialog datePickerDialog;
     ImageView addImage;
     RadioGroup gender;
@@ -186,11 +186,8 @@ public class StudentUpdater extends AppCompatActivity {
         addImage = findViewById(R.id.addImage);
         saveStudent = findViewById(R.id.save_btn);
         cancelStudent = findViewById(R.id.cancel_btn);
-        selectDateBtn = findViewById(R.id.selectDateBtn);
 
-        studentDOB.setEnabled(false);
-
-        selectDateBtn.setOnClickListener(new View.OnClickListener() {
+        studentDOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar c = Calendar.getInstance();
@@ -280,7 +277,9 @@ public class StudentUpdater extends AppCompatActivity {
                         studentDOB.getText().toString(), genderChoice,
                         stud_course.getText().toString());
                 db.StudentDao().updateStudent(currentStudent);
-                startActivity(new Intent(StudentUpdater.this, TabActivity.class));
+                Intent intent = new Intent(StudentUpdater.this, TabActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 finish();
             }
         });
@@ -288,8 +287,9 @@ public class StudentUpdater extends AppCompatActivity {
         cancelStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(StudentUpdater.this, TabActivity.class));
-                finish();
+                Intent intent = new Intent(StudentUpdater.this, TabActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 

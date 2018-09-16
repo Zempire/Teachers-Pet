@@ -12,10 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+    import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -30,34 +37,40 @@ import androidx.room.Room;
 public class ExamList extends Fragment implements ExamViewHolder.ExamListener, View.OnLongClickListener {
 
     boolean is_in_action_mode = false;
+    int mExpandedPosition = -1;
+    int previousExpandPosition = -1;
+    int deleteCount = 0;
     FloatingActionButton examFab;
-    RecyclerView recyclerView;
-    ExamAdapter adapter;
+    TextView toolbarText;
+    RecyclerView completedRecycler, upcomingRecycler;
+    ExamAdapter completedAdapter, upcomingAdapter;
     AppDatabase db;
-    List<Exam> exams;
+    List<Exam> exams, upcomingExams, completedExams;
     List<Exam> selectedExams = new ArrayList<>();
     androidx.appcompat.widget.Toolbar toolbar;
     AppCompatActivity activity;
 
+    Date currentTime = Calendar.getInstance().getTime();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_exam_tab, container, false);
-        recyclerView = rootView.findViewById(R.id.examRecycler);
+        upcomingRecycler = rootView.findViewById(R.id.upcomingRecycler);
+        completedRecycler = rootView.findViewById(R.id.completedRecylcer);
         examFab = rootView.findViewById(R.id.examFab);
 
         //Setting up Fragment access to the toolbar and menu.
         toolbar = getActivity().findViewById(R.id.mainToolbar);
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+        toolbarText = toolbar.findViewById(R.id.toolbar_text);
+        toolbarText.setText("0 SELECTED");
+        toolbarText.setVisibility(View.GONE);
 
         db = Room.databaseBuilder(getActivity().getApplicationContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new ExamAdapter(getLayoutInflater(), this, this);
-        recyclerView.setAdapter(adapter);
-        exams = db.ExamDao().getAllExams();
-        adapter.updateItems(exams);
+        updateAdapters();
 
         examFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,14 +101,28 @@ public class ExamList extends Fragment implements ExamViewHolder.ExamListener, V
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        switch(item.getItemId()) {
+            case R.id.massDelete:                   // Deletes all chosen tasks.
+                deleteAllSelected(selectedExams);
+                exams = db.ExamDao().getAllExams();
+                finishActionMode();
+                break;
+            case R.id.action_delete_exam:           // Starts mode for deleting multiple tasks.
+                startActionMode();
+                break;
+            case android.R.id.home:                // Closes mode for deleting multiple tasks.
+                exams = db.ExamDao().getAllExams();
+                finishActionMode();
+                break;
+        }
         return true;
     }
 
 
     @Override
     public boolean onLongClick(View view) {
-        return false;
+        startActionMode();
+        return true;
     }
 
     @Override
@@ -108,30 +135,114 @@ public class ExamList extends Fragment implements ExamViewHolder.ExamListener, V
                         db.StudentExamDao().deleteExam(item.getExam_ID());
                         db.ExamDao().deleteExam(item.getExam_ID());
                         exams = db.ExamDao().getAllExams();
-                        adapter.updateItems(exams);
+                        upcomingAdapter.updateItems(exams);
                     }
                 }).setNegativeButton("CANCEL", null);
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-    @Override
-    public void completeTask(Task item) {
-
-    }
-
-    @Override
-    public void revisitTask(Task item) {
-
-    }
-
-    @Override
-    public void commitChange(Task item) {
-
-    }
-
     @Override
     public void prepareSelection(View view, int position) {
+        if(((CheckBox)view).isChecked()) {
+            selectedExams.add(exams.get(position));
+            deleteCount +=1;
+        } else {
+            selectedExams.remove(exams.get(position));
+            deleteCount -= 1;
+        }
+        updateCounter(deleteCount);
+    }
+
+    @Override
+    public void expandView(boolean isExpanded, int position) {
+        mExpandedPosition = isExpanded ? -1:position;
+        upcomingAdapter.notifyItemChanged(previousExpandPosition);
+        upcomingAdapter.notifyItemChanged(position);
+        completedAdapter.notifyItemChanged(previousExpandPosition);
+        completedAdapter.notifyItemChanged(position);
+        updateAdapters();
+    }
+
+    // Changes menu and starts multi delete students mode.
+    public void startActionMode() {
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.menu_action_mode);
+        is_in_action_mode = true;
+        toolbarText.setVisibility(View.VISIBLE);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        updateAdapters();
+//        adapter.notifyDataSetChanged();
+    }
+
+    // Ends the multi delete students mode.
+    public void finishActionMode() {
+        is_in_action_mode = false;
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.menu_exam);
+        toolbarText.setVisibility(View.GONE);
+        deleteCount = 0;
+        toolbarText.setText("0 SELECTED");
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
+        selectedExams = new ArrayList<>();
+        updateAdapters();
 
     }
+
+    // Deletes all selected students from the database.
+    public void deleteAllSelected(List<Exam> selectedExams){
+        for (int i = 0; i < selectedExams.size();i++) {
+            db.StudentExamDao().deleteExam(selectedExams.get(i).getExam_ID());
+            db.ExamDao().deleteExam(selectedExams.get(i).getExam_ID());
+        }
+    }
+
+    public void updateCounter(int counter) {
+        if (counter == 0) {
+            toolbarText.setText("0 SELECTED");
+        } else {
+            toolbarText.setText(counter + " SELECTED");
+        }
+    }
+
+    public void updateAdapters() {
+        upcomingExams = new ArrayList<>();
+        completedExams = new ArrayList<>();
+        exams = db.ExamDao().getAllExams();
+        sortExams(exams);
+        upcomingRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        upcomingAdapter = new ExamAdapter(getLayoutInflater(), this, this);
+        upcomingRecycler.setAdapter(upcomingAdapter);
+        upcomingAdapter.updateItems(upcomingExams);
+
+        completedRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        completedAdapter = new ExamAdapter(getLayoutInflater(), this, this);
+        completedRecycler.setAdapter(completedAdapter);
+        exams = db.ExamDao().getAllExams();
+        completedAdapter.updateItems(completedExams);
+    }
+
+    public void sortExams(List<Exam> exams) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+        for (Exam exam : exams) {
+            Date date = new Date();
+            try {
+                String dateTime = exam.getDateTime();
+                date = format.parse(dateTime);
+                if (currentTime.before(date)) {
+                    upcomingExams.add(exam);
+                } else {
+                    completedExams.add(exam);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
 }

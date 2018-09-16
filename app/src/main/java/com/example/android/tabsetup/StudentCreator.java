@@ -167,7 +167,7 @@ public class StudentCreator extends AppCompatActivity {
     ImageView addImage;
     AutoCompleteTextView stud_state, stud_course;
     LinearLayout addressExpanded;
-    Button saveStudent, cancelStudent, selectDateBtn;
+    Button saveStudent, cancelStudent;
     DatePickerDialog datePickerDialog;
     RadioGroup gender;
 
@@ -197,11 +197,10 @@ public class StudentCreator extends AppCompatActivity {
         stud_course = findViewById(R.id.course);
         saveStudent = findViewById(R.id.save_btn);
         cancelStudent = findViewById(R.id.cancel_btn);
-        selectDateBtn = findViewById(R.id.selectDateBtn);
         addImage = findViewById(R.id.addImage);
         addImage.setEnabled(false);
         addImage.setImageAlpha(10);
-        studentDOB.setEnabled(false);
+//        studentDOB.setEnabled(false);
 
         //Allow user to open images and choose one.
         addImage.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +226,7 @@ public class StudentCreator extends AppCompatActivity {
 
         //Button for selecting the date. Will get the current date and make that the default
         // setting.
-        selectDateBtn.setOnClickListener(new View.OnClickListener() {
+        studentDOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar c = Calendar.getInstance();
@@ -283,6 +282,7 @@ public class StudentCreator extends AppCompatActivity {
                     Intent intent = new Intent(StudentCreator.this, TabActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -293,7 +293,9 @@ public class StudentCreator extends AppCompatActivity {
         cancelStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent intent = new Intent(StudentCreator.this, TabActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 

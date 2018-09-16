@@ -27,6 +27,8 @@ import androidx.room.Room;
 public class  StudentList extends Fragment implements StudentViewHolder.StudentListener, View.OnLongClickListener {
 
     boolean is_in_action_mode = false;  //Flag for mass delete mode.
+    int mExpandedPosition = -1;
+    int previousExpandPosition = -1;
     int deleteCount = 0;                //For use in displaying selected count.
     FloatingActionButton studentFab;
     TextView toolbarText;
@@ -66,7 +68,6 @@ public class  StudentList extends Fragment implements StudentViewHolder.StudentL
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), StudentCreator.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
 
             }
@@ -168,6 +169,14 @@ public class  StudentList extends Fragment implements StudentViewHolder.StudentL
         }
         updateCounter(deleteCount);
     }
+
+    @Override
+    public void expandView(boolean isExpanded, int position) {
+        mExpandedPosition = isExpanded ? -1:position;
+        adapter.notifyItemChanged(previousExpandPosition);
+        adapter.notifyItemChanged(position);
+        adapter.updateItems(students);
+    }
     // End of Interface methods.
 
     // Longclick to be used by the ViewHolder.
@@ -185,6 +194,8 @@ public class  StudentList extends Fragment implements StudentViewHolder.StudentL
         toolbarText.setVisibility(View.VISIBLE);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        adapter.notifyDataSetChanged();
+        adapter.updateItems(students);
     }
 
     // Ends the multi delete students mode.

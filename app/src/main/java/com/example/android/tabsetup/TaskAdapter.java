@@ -16,11 +16,6 @@ public class TaskAdapter extends RecyclerView.Adapter {
     TaskList taskList;
     TaskViewHolder th;
 
-    //For controlling expansion of just 1 ViewHolder.
-    private int mExpandedPosition = -1;
-    private int previousExpandPosition = -1;
-
-
     public TaskAdapter(LayoutInflater inflater, TaskViewHolder.TaskListener taskListener, TaskList taskList) {
         this.inflater = inflater;
         this.taskListener = taskListener;
@@ -68,20 +63,12 @@ public class TaskAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         th = (TaskViewHolder) holder;
         th.setItem(items.get(position));
-        final boolean isExpanded = position==mExpandedPosition;
-        th.optionsContainer.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        th.toggleTaskInfo.setChecked(isExpanded?true:false);
+        th.isExpanded = position==taskList.mExpandedPosition;
+        th.optionsContainer.setVisibility(th.isExpanded?View.VISIBLE:View.GONE);
+        th.toggleTaskInfo.setRotation(th.isExpanded?180:0);
 
-        if (isExpanded)
-            previousExpandPosition = position;
-        th.toggleTaskInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1:position;
-                notifyItemChanged(previousExpandPosition);
-                notifyItemChanged(position);
-            }
-        });
+        if (th.isExpanded)
+            taskList.previousExpandPosition = position;
 
         th.multiSelectBox.setChecked(false);
         th.taskContainer.setBackgroundResource(R.color.taskSmall);

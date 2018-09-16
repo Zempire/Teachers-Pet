@@ -16,13 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 public class ExamViewHolder extends RecyclerView.ViewHolder {
+
+    boolean isExpanded = false;
     TextView examName;
     TextView examID;
     TextView examDateTime;
     TextView examLocation;
     ConstraintLayout examContainer, optionsContainer;
     Button deleteExamBtn;
-    ToggleButton toggleTaskInfo;
+    ImageView toggleExamInfo;
     CheckBox multiSelectBox;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
@@ -36,13 +38,12 @@ public class ExamViewHolder extends RecyclerView.ViewHolder {
     // the classes and also lightens the load on the ViewHolder too.
     public interface ExamListener{
         void deleteExam(final Exam item);
-        void completeTask(Task item);
-        void revisitTask(Task item);
-        void commitChange(Task item);
         void prepareSelection(View view, int position);
+        void expandView(boolean isExpanded, int position);
+
     }
 
-    public ExamViewHolder(View itemView, final ExamListener listener, ExamList examList) {
+    public ExamViewHolder(View itemView, final ExamListener listener, final ExamList examList) {
         super(itemView);
         this.listener = listener;
         this.examList = examList;
@@ -54,7 +55,7 @@ public class ExamViewHolder extends RecyclerView.ViewHolder {
         optionsContainer = itemView.findViewById(R.id.optionsContainer);
         deleteExamBtn = itemView.findViewById(R.id.deleteExamBtn);
         recyclerView = itemView.findViewById(R.id.resultsList);
-        toggleTaskInfo = itemView.findViewById(R.id.toggleExamInfo);
+        toggleExamInfo = itemView.findViewById(R.id.toggleExamInfo);
         multiSelectBox = itemView.findViewById(R.id.multiSelectBox);
 
         deleteExamBtn.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +65,25 @@ public class ExamViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
+        examContainer.setOnLongClickListener(examList);
+
+        examContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (examList.is_in_action_mode) {
+                    if (multiSelectBox.isChecked()) {
+                        multiSelectBox.setChecked(false);
+                    } else {
+                        multiSelectBox.setChecked(true);
+                    }
+                    examContainer.setBackgroundResource(multiSelectBox.isChecked() ?
+                            R.color.deleteObject : R.color.taskSmall);
+                    listener.prepareSelection(multiSelectBox, getAdapterPosition());
+                } else {
+                    listener.expandView(isExpanded, getAdapterPosition());
+                }
+            }
+        });
     }
 
     public void setItem(Exam item) {

@@ -11,6 +11,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class TaskViewHolder extends RecyclerView.ViewHolder {
+
+    boolean isExpanded = false;
     TextView taskID;
     TextView taskName;
     TextView taskDesc;
@@ -19,7 +21,7 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
     TextView taskLocation;
     ConstraintLayout taskContainer, optionsContainer;
     Button deleteTaskBtn, commitTaskBtn;
-    ToggleButton toggleTaskInfo;
+    ImageView toggleTaskInfo;
     CheckBox multiSelectBox, taskStatusBox;
     TaskList taskList; //Allows use of TaskList's onLongClickListener
     Task item;
@@ -33,6 +35,7 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
         void revisitTask(Task item);
         void commitChange(Task item);
         void prepareSelection(View view, int position);
+        void expandView(boolean isExpanded, int position);
     }
 
     public TaskViewHolder(View itemView, final TaskListener listener, final TaskList taskList) {
@@ -51,6 +54,7 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
         taskStatusBox = itemView.findViewById(R.id.taskStatusBox);
         toggleTaskInfo = itemView.findViewById(R.id.toggleTaskInfo);
         multiSelectBox = itemView.findViewById(R.id.taskMultiSelectBox);
+        toggleTaskInfo.setEnabled(false);
         commitTaskBtn = itemView.findViewById(R.id.commitTaskBtn);
 
         taskContainer.setOnLongClickListener(taskList);
@@ -67,6 +71,8 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
                     taskContainer.setBackgroundResource(multiSelectBox.isChecked() ?
                             R.color.deleteObject : R.color.taskSmall);
                     listener.prepareSelection(multiSelectBox, getAdapterPosition());
+                } else {
+                    listener.expandView(isExpanded, getAdapterPosition());
                 }
             }
         });
