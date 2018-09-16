@@ -183,8 +183,6 @@ public class StudentCreator extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_student);
 
-//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
         studentID = findViewById(R.id.studentID);
@@ -200,11 +198,8 @@ public class StudentCreator extends AppCompatActivity {
         saveStudent = findViewById(R.id.save_btn);
         cancelStudent = findViewById(R.id.cancel_btn);
         addImage = findViewById(R.id.addImage);
-        addImage.setEnabled(false);
-        addImage.setImageAlpha(10);
-//        studentDOB.setEnabled(false);
 
-        //Allow user to open images and choose one.
+        //Allow user to open the camera and save a photo.
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,22 +207,7 @@ public class StudentCreator extends AppCompatActivity {
                 }
         });
 
-        studentID.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (studentID.getText().toString().length() >= 5) {
-                    addImage.setEnabled(true);
-                    addImage.setImageAlpha(255);
-                } else {
-                    addImage.setEnabled(false);
-                    addImage.setImageAlpha(10);
-                }
-            }
-        });
-
-
-        //Button for selecting the date. Will get the current date and make that the default
-        // setting.
+        //Gets the current date and sets the DatePicker to today.
         studentDOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

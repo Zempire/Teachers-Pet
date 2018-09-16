@@ -69,7 +69,7 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
                         multiSelectBox.setChecked(true);
                     }
                     taskContainer.setBackgroundResource(multiSelectBox.isChecked() ?
-                            R.color.deleteObject : R.color.taskSmall);
+                            R.color.deleteObject : R.color.cardBackground);
                     listener.prepareSelection(multiSelectBox, getAdapterPosition());
                 } else {
                     listener.expandView(isExpanded, getAdapterPosition());

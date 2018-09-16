@@ -80,7 +80,7 @@ public class ExamAdapter extends RecyclerView.Adapter {
             previousExpandPosition = position;
 
         eh.multiSelectBox.setChecked(false);
-        eh.examContainer.setBackgroundResource(R.color.taskSmall);
+        eh.examContainer.setBackgroundResource(R.color.cardBackground);
         db = Room.databaseBuilder(eh.examName.getContext(), AppDatabase.class,
                 "production").allowMainThreadQueries().build();
         results = db.StudentExamDao().getResults(eh.item.getExam_ID());

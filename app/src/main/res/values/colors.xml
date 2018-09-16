@@ -2,11 +2,11 @@
 <resources>
     <color name="colorPrimary">#830b1f</color>
     <color name="colorPrimaryDark">#510d18</color>
-    <color name="colorAccent">#a9142d</color>
+    <color name="colorAccent">#933032</color>
 
     <color name="mainBackground">#ffffff</color>
-    <color name="altBackground">#ededed</color>
-    
+    <color name="altBackground">#c9c9c9</color>
+    <color name="cardBackground">#fcfcfc</color>
     
     <color name="deleteObject">#49ff0000</color>
     <color name="transparentBg">#d0000000</color>

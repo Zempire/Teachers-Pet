@@ -71,7 +71,7 @@ public class TaskAdapter extends RecyclerView.Adapter {
             taskList.previousExpandPosition = position;
 
         th.multiSelectBox.setChecked(false);
-        th.taskContainer.setBackgroundResource(R.color.taskSmall);
+        th.taskContainer.setBackgroundResource(R.color.cardBackground);
         if (!taskList.is_in_action_mode) {
             th.toggleTaskInfo.setVisibility(View.VISIBLE);
         } else {
@@ -80,7 +80,7 @@ public class TaskAdapter extends RecyclerView.Adapter {
 
         // Changes the look of Task depending on it's complete Status.
         th.taskContainer.setBackgroundResource(items.get(position).getTaskStatus() == 1?
-                R.color.completedTask:R.color.taskSmall);
+                R.color.completedTask:R.color.cardBackground);
     }
 
     @Override

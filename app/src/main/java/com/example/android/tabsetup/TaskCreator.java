@@ -24,7 +24,7 @@ public class TaskCreator extends Dialog {
     public Activity a;
     public Dialog d;
     EditText taskName, taskDescription, taskLocation, taskDate;
-    Button saveTask, cancelTask, taskDateBtn;
+    Button saveTask, cancelTask;
     String date_time = "";
     int day, month, year, hour, minute;
 
@@ -46,10 +46,8 @@ public class TaskCreator extends Dialog {
         taskDate = findViewById(R.id.taskDate);
         cancelTask = findViewById(R.id.task_cancel_btn);
         saveTask = findViewById(R.id.task_save_btn);
-        taskDateBtn = findViewById(R.id.taskDateBtn);
 
-        taskDate.setEnabled(false);
-        taskDateBtn.setOnClickListener(new View.OnClickListener() {
+        taskDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 datePicker();

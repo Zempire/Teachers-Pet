@@ -112,9 +112,6 @@ public class  StudentList extends Fragment implements StudentViewHolder.StudentL
                 students = db.StudentDao().getAllStudents();
                 adapter.updateItems(students);
                 break;
-            case R.id.action_open_gallery:
-                Intent gallery = new Intent(getContext(), GalleryActivity.class);
-                startActivity(gallery);
             default:
                 break;
         }

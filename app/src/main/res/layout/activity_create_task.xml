@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="?android:colorBackground">
+    android:background="@color/mainBackground">
 
     <TextView
         android:id="@+id/textView"
@@ -16,7 +16,8 @@
         android:text="NEW TASK"
         android:textAlignment="center"
         android:textSize="30sp"
-        android:textStyle="bold"
+        android:textStyle="bold|italic"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -97,7 +98,7 @@
         android:layout_marginEnd="8dp"
         android:layout_weight="2"
         android:visibility="visible"
-        app:layout_constraintEnd_toStartOf="@+id/taskDateBtn"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taskLocationContainer">
 
@@ -107,33 +108,20 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/examDateContainer"
             android:layout_alignStart="@+id/examDateContainer"
-            android:hint="Task Date and Time"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Date and Time"
             android:inputType="textMultiLine|datetime" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/taskDateBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_gravity="bottom"
-        android:layout_marginEnd="8dp"
-        android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:text="choose"
-        android:textAlignment="center"
-        android:textColor="@color/taskPrimaryDark"
-        app:layout_constraintBottom_toBottomOf="@+id/taskDateContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/taskDateContainer" />
-
-    <Button
         android:id="@+id/task_cancel_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/taskPrimary"
+        android:background="@android:color/white"
         android:text="CANCEL"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBaseline_toBaselineOf="@+id/task_save_btn"
         app:layout_constraintEnd_toStartOf="@+id/task_save_btn"
         app:layout_constraintStart_toStartOf="parent" />
@@ -143,9 +131,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:background="@color/taskPrimary"
+        android:background="@android:color/white"
         android:text="SAVE"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/task_cancel_btn"
         app:layout_constraintTop_toBottomOf="@+id/taskDateContainer" />

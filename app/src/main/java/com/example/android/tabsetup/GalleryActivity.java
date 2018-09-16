@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -59,6 +60,8 @@ public class GalleryActivity extends AppCompatActivity implements GalleryViewHol
         toolbar.setTitle("Image Gallery");
         toolbar.setTitleTextColor(Color.BLACK);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null)
@@ -75,6 +78,18 @@ public class GalleryActivity extends AppCompatActivity implements GalleryViewHol
         adapter = new GalleryAdapter(getLayoutInflater(), this, this);
         recyclerView.setAdapter(adapter);
         adapter.updateItems(images);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();   
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     @Override

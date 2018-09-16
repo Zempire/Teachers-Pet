@@ -12,7 +12,7 @@
         android:id="@+id/studentContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@color/cardBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +34,7 @@
             android:layout_marginStart="8dp"
             app:cardCornerRadius="25dp"
             app:cardElevation="0dp"
+            android:background="@color/cardBackground"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="false"
             app:layout_constraintBottom_toBottomOf="@+id/student_id"
@@ -69,7 +70,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@android:color/white"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -128,7 +128,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
                 android:text="Update"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorAccent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/student_dob" />
 

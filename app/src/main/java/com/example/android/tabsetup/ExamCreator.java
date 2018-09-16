@@ -26,7 +26,7 @@ public class ExamCreator extends Dialog {
     public Activity a;
     public Dialog d;
     EditText examName, examDate, examLocation;
-    Button saveExam, cancelExam, examDateBtn;
+    Button saveExam, cancelExam;
     String date_time = "";
     int day, month, year, hour, minute;
 
@@ -48,10 +48,8 @@ public class ExamCreator extends Dialog {
         examLocation = findViewById(R.id.examLocation);
         cancelExam = findViewById(R.id.exam_cancel_btn);
         saveExam = findViewById(R.id.exam_save_btn);
-        examDateBtn = findViewById(R.id.examDateBtn);
 
-        examDate.setEnabled(false);
-        examDateBtn.setOnClickListener(new View.OnClickListener() {
+        examDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 datePicker();

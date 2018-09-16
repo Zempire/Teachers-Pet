@@ -68,7 +68,7 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
                         multiSelectBox.setChecked(true);
                     }
                     studentContainer.setBackgroundResource(multiSelectBox.isChecked() ?
-                            R.color.deleteObject : R.color.taskSmall);
+                            R.color.deleteObject : R.color.cardBackground);
                     listener.prepareSelection(multiSelectBox, getAdapterPosition());
                 } else {
                     System.out.println("MY ID IS: " + item.getStudent_ID());
@@ -110,7 +110,7 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         File image = new File(item.getProfilePicture());
         if (image.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
-            Bitmap resized = Bitmap.createScaledBitmap(myBitmap, 50, 50, true);
+            Bitmap resized = Bitmap.createScaledBitmap(myBitmap, 75, 75, true);
             profilePicStudent.setImageBitmap(resized);
         } else {
             profilePicStudent.setImageResource(R.drawable.newimage);

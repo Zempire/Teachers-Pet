@@ -82,7 +82,7 @@ public class StudentAdapter extends RecyclerView.Adapter {
             studentList.previousExpandPosition = position;
 
         vh.multiSelectBox.setChecked(false);
-        vh.studentContainer.setBackgroundResource(R.color.taskSmall);
+        vh.studentContainer.setBackgroundResource(R.color.cardBackground);
         if (!studentList.is_in_action_mode) {
            vh.toggleStudentInfo.setVisibility(View.VISIBLE);
         } else {
