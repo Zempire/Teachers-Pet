@@ -18,7 +18,7 @@
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold|italic"
-        android:textColor="@android:color/black"
+        android:textColor="@color/hintText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,6 +38,8 @@
             android:id="@+id/examName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/baseText"
+            android:textColorHint="@color/hintText"
             android:hint="Exam Name"
             android:inputType="textPersonName" />
 
@@ -62,6 +64,8 @@
             android:layout_height="wrap_content"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:textColor="@color/baseText"
+            android:textColorHint="@color/hintText"
             android:hint="Exam Date and Time"
             android:inputType="textMultiLine|datetime" />
 
@@ -84,6 +88,8 @@
             android:id="@+id/examLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/baseText"
+            android:textColorHint="@color/hintText"
             android:hint="Location"
             android:inputType="textPostalAddress" />
 
@@ -94,7 +100,7 @@
         android:id="@+id/exam_cancel_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@color/mainBackground"
         android:text="CANCEL"
         android:textColor="@color/colorAccent"
         app:layout_constraintBaseline_toBaselineOf="@+id/exam_save_btn"
@@ -106,7 +112,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:background="@android:color/white"
+        android:background="@color/mainBackground"
         android:text="SAVE"
         android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -17,7 +17,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textColor="@android:color/black"
+        android:textColor="@color/baseText"
         android:textSize="18sp"
         android:visibility="gone" />
 
@@ -28,7 +28,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="2 Unit Mathematics"
-        android:textColor="@android:color/black"
+        android:textColor="@color/baseText"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,6 +40,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:text="DD/MM/YYYY HH:MM"
+        android:textColor="@color/hintText"
         android:textSize="14sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Building D 1.04"
-            android:textColor="@android:color/black"
+            android:textColor="@color/baseText"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/locationHeader" />
@@ -133,6 +134,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="Location"
+            android:textColor="@color/hintText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

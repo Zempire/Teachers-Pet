@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/mainBackground">
 
     <LinearLayout
         android:id="@+id/optionsLayout"
@@ -58,6 +59,7 @@
                 android:layout_width="180dp"
                 android:layout_height="180dp"
                 android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/mainBackground"
                 app:cardCornerRadius="90dp"
                 app:cardElevation="0dp"
                 app:cardPreventCornerOverlap="false"
@@ -100,7 +102,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="First Name"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:textColor="@color/baseText"
+                        android:textColorHint="@color/hintText" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -114,7 +118,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Last Name"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:textColor="@color/baseText"
+                        android:textColorHint="@color/hintText" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -143,7 +149,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Student ID"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:textColor="@color/baseText"
+                        android:textColorHint="@color/hintText" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -157,10 +165,12 @@
                         android:id="@+id/studentDOB"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="D.O.B"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:inputType="date" />
+                        android:hint="D.O.B"
+                        android:inputType="date"
+                        android:textColor="@color/baseText"
+                        android:textColorHint="@color/hintText" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -205,7 +215,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Street"
-                        android:inputType="textPostalAddress" />
+                        android:inputType="textPostalAddress"
+                        android:textColor="@color/baseText"
+                        android:textColorHint="@color/hintText" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -218,7 +230,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="City"
-                        android:inputType="textPostalAddress" />
+                        android:inputType="textPostalAddress"
+                        android:textColor="@color/baseText"
+                        android:textColorHint="@color/hintText" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -228,49 +242,53 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/stud_post"
-                        android:layout_width="match_parent"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:hint="Post Code"
-                        android:inputType="number" />
+                        android:layout_weight="1">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/stud_post"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Post Code"
+                            android:inputType="number"
+                            android:textColor="@color/baseText"
+                            android:textColorHint="@color/hintText" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/stud_state"
-                        android:layout_width="match_parent"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:inputType="textPostalAddress"
-                        android:hint="State" />
+                        android:layout_weight="1">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <AutoCompleteTextView
+                            android:id="@+id/stud_state"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="State"
+                            android:inputType="textPostalAddress"
+                            android:textColor="@color/baseText"
+                            android:textColorHint="@color/hintText" />
 
-                <Spinner
-                    android:id="@+id/stateSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:spinnerMode="dialog"
-                    android:background="?android:colorBackground"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Spinner
+                        android:id="@+id/stateSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="?android:colorBackground"
+                        android:spinnerMode="dialog"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -294,7 +312,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Course"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:textColor="@color/baseText"
+                    android:textColorHint="@color/hintText" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -327,20 +347,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="18dp"
-                    android:text="Male" />
+                    android:text="Male"
+                    android:textColor="@color/baseText" />
 
                 <RadioButton
                     android:id="@+id/femaleRadio"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="18dp"
-                    android:text="Female" />
+                    android:text="Female"
+                    android:textColor="@color/baseText" />
 
                 <RadioButton
                     android:id="@+id/otherRadio"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Other" />
+                    android:text="Other"
+                    android:textColor="@color/baseText" />
             </RadioGroup>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

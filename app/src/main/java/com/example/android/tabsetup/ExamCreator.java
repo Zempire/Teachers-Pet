@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -63,23 +64,25 @@ public class ExamCreator extends Dialog {
         saveExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Exam newExam = new Exam(examName.getText().toString(),
-                        examLocation.getText().toString(),
-                         examDate.getText().toString());
-                Integer examID = (int) (long) db.ExamDao().insertAll(newExam);
-                List<Student> studentList = db.StudentDao().getAllStudents();
-                Random rand = new Random();
-                for (int i = 0; i < studentList.size(); i++) {
-                    int score = rand.nextInt(51) + 45;
-                    StudentExam newResult = new StudentExam(examID,
-                            studentList.get(i).getStudent_ID(), score);
-                    System.out.println(newResult.getExamID() + " " + newResult.getStudentID() + " " + newResult.getScore());
-                    db.StudentExamDao().insert(newResult);
+                if (examDate.getText().toString().equals("")) {
+                    Toast.makeText(a, "Please enter a date.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Exam newExam = new Exam(examName.getText().toString(),
+                            examLocation.getText().toString(),
+                            examDate.getText().toString());
+                    Integer examID = (int) (long) db.ExamDao().insertAll(newExam);
+                    List<Student> studentList = db.StudentDao().getAllStudents();
+                    Random rand = new Random();
+                    for (int i = 0; i < studentList.size(); i++) {
+                        int score = rand.nextInt(51) + 45;
+                        StudentExam newResult = new StudentExam(examID,
+                                studentList.get(i).getStudent_ID(), score);
+                        System.out.println(newResult.getExamID() + " " + newResult.getStudentID() + " " + newResult.getScore());
+                        db.StudentExamDao().insert(newResult);
+                    }
+                    dismiss();
+                    a.recreate();
                 }
-                dismiss();
-                a.recreate();
-
             }
         });
 

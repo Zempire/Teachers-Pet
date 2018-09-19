@@ -106,7 +106,7 @@ public class TaskList extends Fragment implements TaskViewHolder.TaskListener, V
                     startActionMode();
                     break;
                 case android.R.id.home:                // Closes mode for deleting multiple tasks.
-                    tasks = db.TaskDao().getAllTasks();
+                    tasks = db.TaskDao().getUncompletedTasks();
                     finishActionMode();
                     break;
                 case R.id.action_show_complete:

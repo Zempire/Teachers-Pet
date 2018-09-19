@@ -29,7 +29,7 @@ public class TabActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.mainToolbar);
         toolbar.setTitle(getResources().getString(R.string.app_name));
-        toolbar.setTitleTextColor(Color.BLACK);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.baseText));
         setSupportActionBar(toolbar);
 
         tabLayout = findViewById(R.id.tab_layout);
@@ -51,38 +51,6 @@ public class TabActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
 
-//                switch(tab.getPosition()) {
-//                    case 1:
-//                        toolbar.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
-//                                R.color.taskPrimary));
-//                        tabLayout.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
-//                                R.color.taskPrimary));
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                            getWindow().setStatusBarColor(ContextCompat.getColor(TabActivity.this,
-//                                    R.color.taskPrimary));
-//                        }
-//                        break;
-//                    case 2:
-//                        toolbar.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
-//                                R.color.examPrimary));
-//                        tabLayout.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
-//                                R.color.examPrimary));
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                            getWindow().setStatusBarColor(ContextCompat.getColor(TabActivity.this,
-//                                    R.color.examPrimary));
-//                        }
-//                        break;
-//                    default:
-//                        toolbar.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
-//                                R.color.colorAccent));
-//                        tabLayout.setBackgroundColor(ContextCompat.getColor(TabActivity.this,
-//                                R.color.colorAccent));
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                            getWindow().setStatusBarColor(ContextCompat.getColor(TabActivity.this,
-//                                    R.color.colorAccent));
-//                        }
-//                        break;
-//                }
             }
 
             @Override

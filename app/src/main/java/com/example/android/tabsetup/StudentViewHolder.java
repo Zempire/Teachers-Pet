@@ -71,7 +71,6 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
                             R.color.deleteObject : R.color.cardBackground);
                     listener.prepareSelection(multiSelectBox, getAdapterPosition());
                 } else {
-                    System.out.println("MY ID IS: " + item.getStudent_ID());
                     listener.expandView(isExpanded, getAdapterPosition());
 
                 }
