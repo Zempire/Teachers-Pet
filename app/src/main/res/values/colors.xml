@@ -2,13 +2,13 @@
 <resources>
     <color name="colorPrimary">#830b1f</color>
     <color name="colorPrimaryDark">#510d18</color>
-    <color name="colorAccent">#ff6671</color>
+    <color name="colorAccent">#df2a37</color>
 
-    <color name="mainBackground">#484848</color>
-    <color name="altBackground">#454545</color>
-    <color name="cardBackground">#4b4b4b</color>
+    <color name="mainBackground">#fdfdfd</color>
+    <color name="altBackground">#f8f8f8</color>
+    <color name="cardBackground">#fbfbfb</color>
 
-    <color name="baseText">#fafafa</color>
+    <color name="baseText">#0b0b0b</color>
     <color name="hintText">#acacac</color>
 
     <color name="deleteObject">#f4bbbb</color>
