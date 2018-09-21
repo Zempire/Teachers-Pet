@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 public class StudentAdapter extends RecyclerView.Adapter {
     private List<Student> items;
@@ -20,10 +22,8 @@ public class StudentAdapter extends RecyclerView.Adapter {
     StudentList studentList;
     StudentViewHolder vh;
 
-    //For controlling expansion of just 1 ViewHolder.
-//    private int mExpandedPosition = -1;
-//    private int previousExpandPosition = -1;
-
+    AppDatabase db;
+    List<StudentExamResult> results;
 
     public StudentAdapter(LayoutInflater inflater, StudentViewHolder.StudentListener studentListener, StudentList studentList) {
         this.inflater = inflater;
@@ -76,6 +76,12 @@ public class StudentAdapter extends RecyclerView.Adapter {
         vh.optionsContainer.setVisibility(vh.isExpanded?View.VISIBLE:View.GONE);
         vh.toggleStudentInfo.setRotation(vh.isExpanded?180:0);
 
+        db = Room.databaseBuilder(vh.optionsContainer.getContext(), AppDatabase.class,
+                "production").allowMainThreadQueries().build();
+        results = db.StudentExamDao().getResults(vh.item.getStudent_ID());
+        StudentResultAdapter adapter = new StudentResultAdapter(results);
+        vh.recyclerView.setLayoutManager(new LinearLayoutManager(vh.optionsContainer.getContext()));
+        vh.recyclerView.setAdapter(adapter);
 
 
         if (vh.isExpanded)

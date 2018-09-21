@@ -26,8 +26,6 @@ public class ExamViewHolder extends RecyclerView.ViewHolder {
     Button deleteExamBtn;
     ImageView toggleExamInfo;
     CheckBox multiSelectBox;
-    RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
 
 
     ExamList examList; //Allows use of ExamList's onLongClickListener
@@ -54,7 +52,6 @@ public class ExamViewHolder extends RecyclerView.ViewHolder {
         examContainer = itemView.findViewById(R.id.examContainer);
         optionsContainer = itemView.findViewById(R.id.optionsContainer);
         deleteExamBtn = itemView.findViewById(R.id.deleteExamBtn);
-        recyclerView = itemView.findViewById(R.id.resultsList);
         toggleExamInfo = itemView.findViewById(R.id.toggleExamInfo);
         multiSelectBox = itemView.findViewById(R.id.multiSelectBox);
 

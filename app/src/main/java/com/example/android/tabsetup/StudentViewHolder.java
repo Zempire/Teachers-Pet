@@ -30,6 +30,9 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
     Student item;
     StudentListener listener;
 
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
+
     // Allows the passing of methods from the base activity for better communication between
     // the classes and also lightens the load on the ViewHolder too.
     public interface StudentListener{
@@ -44,7 +47,7 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         this.listener = listener;
         this.studentList = studentList;
-        studentName = itemView.findViewById(R.id.studentName);
+        studentName = itemView.findViewById(R.id.examName);
         student_ID = itemView.findViewById(R.id.student_id);
         student_address = itemView.findViewById(R.id.student_address);
         gender = itemView.findViewById(R.id.student_gender);
@@ -56,6 +59,7 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         profilePicStudent = itemView.findViewById(R.id.profilePicList);
         toggleStudentInfo = itemView.findViewById(R.id.toggleStudentInfo);
         multiSelectBox = itemView.findViewById(R.id.multiSelectBox);
+        recyclerView = itemView.findViewById(R.id.resultsList);
         toggleStudentInfo.setEnabled(false);
         studentContainer.setOnLongClickListener(studentList);
         studentContainer.setOnClickListener(new View.OnClickListener() {

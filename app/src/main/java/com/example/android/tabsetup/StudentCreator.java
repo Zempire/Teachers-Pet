@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,15 +28,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.room.Room;
 
-public class StudentCreator extends AppCompatActivity {
+public class StudentCreator extends AppCompatActivity implements StudentExamViewHolder.StudentExamListener{
 
     public static final int PICK_IMAGE = 1; //Make sure only one image is chosen.
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -172,6 +175,8 @@ public class StudentCreator extends AppCompatActivity {
     Button saveStudent, cancelStudent;
     DatePickerDialog datePickerDialog;
     RadioGroup gender;
+    List<Exam> exams;
+    List<Exam> selectedExams = new ArrayList<>();
 
     String mCurrentPhotoPath = "";
 
@@ -380,5 +385,14 @@ public class StudentCreator extends AppCompatActivity {
             }
         }
         return finalOut;
+    }
+
+    @Override
+    public void prepareSelection(View view, int position) {
+        if(((CheckBox)view).isChecked()) {
+            selectedExams.add(exams.get(position));
+        } else {
+            selectedExams.remove(exams.get(position));
+        }
     }
 }

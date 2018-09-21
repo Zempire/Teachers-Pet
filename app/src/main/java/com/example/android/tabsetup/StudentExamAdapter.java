@@ -11,21 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-public class ExamAdapter extends RecyclerView.Adapter {
+public class StudentExamAdapter extends RecyclerView.Adapter {
 
-    public int mExpandedPosition = -1;
-    public int previousExpandPosition = -1;
     private List<Exam> items;
     private LayoutInflater inflater;
-    private ExamViewHolder.ExamListener examListener;
-    ExamList examList;
-    ExamViewHolder eh;
+    private StudentExamViewHolder.StudentExamListener studentExamListener;
+    StudentExamViewHolder seh;
 
 
-    public ExamAdapter(LayoutInflater inflater, ExamViewHolder.ExamListener examListener, ExamList examList) {
+    public StudentExamAdapter(LayoutInflater inflater, StudentExamViewHolder.StudentExamListener studentExamListener) {
         this.inflater = inflater;
-        this.examListener = examListener;
-        this.examList = examList;
+        this.studentExamListener = studentExamListener;
         items = new ArrayList<>();
     }
 
@@ -61,31 +57,15 @@ public class ExamAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.exam_row, parent, false);
-        return new ExamViewHolder(v, examListener, examList);
+        View v = inflater.inflate(R.layout.exam_chooser_row, parent, false);
+        return new StudentExamViewHolder(v, studentExamListener);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        eh = (ExamViewHolder) holder;
-        eh.setItem(items.get(position));
-        eh.isExpanded = position==mExpandedPosition;
-        eh.optionsContainer.setVisibility(eh.isExpanded?View.VISIBLE:View.GONE);
-        eh.toggleExamInfo.setRotation(eh.isExpanded?180:0);
+        seh = (StudentExamViewHolder) holder;
+        seh.setItem(items.get(position));
 
-        if (eh.isExpanded)
-            previousExpandPosition = position;
-
-        eh.multiSelectBox.setChecked(false);
-        eh.examContainer.setBackgroundResource(R.color.cardBackground);
-
-
-
-        if (!examList.is_in_action_mode) {
-            eh.toggleExamInfo.setVisibility(View.VISIBLE);
-        } else {
-            eh.toggleExamInfo.setVisibility(View.GONE);
-        }
     }
 
     @Override

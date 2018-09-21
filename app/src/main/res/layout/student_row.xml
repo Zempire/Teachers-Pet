@@ -25,7 +25,7 @@
             android:background="@drawable/toggle_on"
             app:layout_constraintBottom_toBottomOf="@+id/student_id"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/studentName" />
+            app:layout_constraintTop_toTopOf="@+id/examName" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -39,7 +39,7 @@
             app:cardUseCompatPadding="false"
             app:layout_constraintBottom_toBottomOf="@+id/student_id"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/studentName">
+            app:layout_constraintTop_toTopOf="@+id/examName">
 
             <ImageView
                 android:id="@+id/profilePicList"
@@ -62,7 +62,7 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/student_id"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/studentName"
+            app:layout_constraintTop_toTopOf="@+id/examName"
             app:layout_constraintVertical_bias="0.39" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,7 +75,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/student_id">
+            app:layout_constraintTop_toBottomOf="@+id/student_id"
+            app:layout_constraintVertical_bias="0.0">
 
             <TextView
                 android:id="@+id/addressHeader"
@@ -127,12 +128,14 @@
                 android:id="@+id/updateImgBtn"
                 android:layout_width="0dp"
                 android:layout_height="25dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@android:color/transparent"
                 android:text="Update"
                 android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/student_dob" />
+                app:layout_constraintTop_toBottomOf="@+id/resultsList" />
 
             <Button
                 android:id="@+id/deleteImgBtn"
@@ -168,6 +171,28 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dobHeader" />
 
+            <TextView
+                android:id="@+id/examHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:text="Exams"
+                android:textColor="@color/hintText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/student_gender" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/resultsList"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/examHeader" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -179,12 +204,12 @@
             android:textSize="18sp"
             android:textColor="@color/hintText"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/studentName"
-            app:layout_constraintTop_toBottomOf="@+id/studentName"
+            app:layout_constraintStart_toStartOf="@+id/examName"
+            app:layout_constraintTop_toBottomOf="@+id/examName"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/studentName"
+            android:id="@+id/examName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

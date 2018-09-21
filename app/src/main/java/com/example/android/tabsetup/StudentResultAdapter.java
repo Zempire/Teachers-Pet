@@ -9,10 +9,10 @@ import java.util.List;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class StudentResultAdapter extends RecyclerView.Adapter<StudentResultAdapter.ViewHolder> {
-    List<StudentResult> results;
+    List<StudentExamResult> results;
 
     //Constructor for results array.
-    public StudentResultAdapter(List<StudentResult> results) {
+    public StudentResultAdapter(List<StudentExamResult> results) {
         this.results = results;
     }
 
@@ -26,10 +26,9 @@ public class StudentResultAdapter extends RecyclerView.Adapter<StudentResultAdap
 
     @Override
     public void onBindViewHolder(final StudentResultAdapter.ViewHolder holder, final int position) {
-        holder.studentName.setText(results.get(position).getFirst_name() + " " + results.get(position).getLast_name());
+        holder.examName.setText(results.get(position).getExam_name());
+        System.out.println("MY EXAM NAME IS " + results.get(position).getExam_name());
         holder.studentResult.setText(Integer.toString(results.get(position).getScore()));
-        holder.studentResultID.setText(Integer.toString(results.get(position).getStudentID()));
-
     }
 
     @Override
@@ -38,17 +37,14 @@ public class StudentResultAdapter extends RecyclerView.Adapter<StudentResultAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView studentName;
+        public TextView examName;
         public TextView studentResult;
-        public TextView studentResultID;
-
 
 
         public ViewHolder(View itemView) {
             super(itemView);
-            studentName = itemView.findViewById(R.id.studentName);
+            examName = itemView.findViewById(R.id.examName);
             studentResult = itemView.findViewById(R.id.studentResult);
-            studentResultID = itemView.findViewById(R.id.studentResultID);
 
         }
     }
